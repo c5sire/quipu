@@ -4,6 +4,18 @@
 #' by a circle. The circle's diameter is sized inversely by its rareness within the set of accessions 
 #' in the database at hand.
 #' 
+#' Motivation: Genebanks increasingly use molecular markers for routine
+#' characterization of ex-situ collections and farmer managed diversity. CIP's
+#' (International Potato Center) genebank presently uses a SSR marker-kit to
+#' produce molecular profiles for potato accessions. We have been searching
+#' for a compact graphical representation that shows both
+#' molecular diversity and accession characteristics - thus permitting
+#' biologists and collection curators to have a simpler way to interpret
+#' high-volume data. Inspired by the ancient Andean quipus we devised a graph
+#' that allows for standardized representation while leaving room for updates
+#' of the marker kit and the collection of accessions. The graph has been used
+#' in several CIP publications.
+#' 
 #' @name quipu-package
 #' @docType package
 NA
@@ -133,8 +145,8 @@ rquipu <-  function (accession, marker, marker.size, map.location,
    nameclones1=paste("CIP",unique(datt$CIP.number))
    nameclones=paste(nameclones1,"                          ", sep="")
    
-   #nameclones2=paste(dir.print,nameclones1,".jpg", sep="")
-   nameclones2=file.path(dir.print, paste(nameclones1,".png", sep=""))
+   if(img.format=="jpeg") nameclones2=paste(dir.print,nameclones1,".jpg", sep="")
+   if(img.format=="png") nameclones2=file.path(dir.print, paste(nameclones1,".png", sep=""))
    
    for(j in 1:length(clones))
    {
@@ -142,8 +154,8 @@ rquipu <-  function (accession, marker, marker.size, map.location,
      mrcs=unique(grup1$primer_name_original) 
      
      ## print image 
-     #jpeg(nameclones2[j],quality = 100,width = res[1], height = res[2],pointsize = 22)
-     png(nameclones2[j],width = res[1], height = res[2],pointsize = 22)
+     if(img.format=="jpeg") jpeg(nameclones2[j],quality = 100,width = res[1], height = res[2],pointsize = 22)
+     if(img.format=="png") png(nameclones2[j],width = res[1], height = res[2],pointsize = 22)
      plot(1:length(mrcs),seq(min(grup1$Marker.size), max(grup1$Marker.size), length.out=length(mrcs)),
           type="n",axes=FALSE,ylab=list("Position bp",cex=0.5),xlab=list("Chromosomes/SSR Name                                          ",cex=0.5),
           main=c(paste("Accession number:",nameclones[j]),""," "),
