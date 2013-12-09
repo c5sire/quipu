@@ -19,3 +19,7 @@ Genebanks increasingly use molecular markers for routine
     that allows for standardized representation while leaving room for updates
     of the marker kit and the collection of accessions. The graph has been used
     in several CIP publications.
+    
+A sample image from the example data:
+
+![Sample quipu image](img/sample.1.png)
