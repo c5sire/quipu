@@ -6,7 +6,17 @@ Date: 2013-12-04
 Author: Reinhard Simon, Pablo Carhuapoma, Stef de Haan, Marc Ghislain, Jorge
     Nunez, Rene Gomez, Felipe de Mendiburu, William Roca, Merideth Bonierbale
 Maintainer: Reinhard Simon <R.SIMON@CGIAR.ORG>
-Description: More about what it does (maybe more than one line)
+Description: Genebanks increasingly use molecular markers for routine
+    characterization of ex-situ collections and farmer managed diversity. CIP's
+    (International Potato Center) genebank presently uses a SSR marker-kit to
+    produce molecular profiles for potato accessions. We have been searching
+    for a compact graphical representation that shows both
+    molecular diversity and accession characteristics - thus permitting
+    biologists and collection curators to have a simpler way to interpret
+    high-volume data. Inspired by the ancient Andean quipus we devised a graph
+    that allows for standardized representation while leaving room for updates
+    of the marker kit and the collection of accessions. The graph has been used
+    in several CIP publications.
 License: GPL-2
 LazyData: yes
 Suggests:
