@@ -26,5 +26,3 @@ Depends:
     R (>= 3.0.0),
     pixmap,
     stats
-Collate:
-    'quipu.R'

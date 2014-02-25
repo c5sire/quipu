@@ -18,7 +18,7 @@
 #' 
 #' @name quipu-package
 #' @docType package
-NA
+NULL
 
 #' @name potato.quipu
 #' @title SSR sample data for a set of potato accessions
@@ -32,14 +32,14 @@ NA
 #'  \item{"map_location"} {Genetic ap location; usually Roman numbers for chromosomes or linkage group.}
 #' }
 #' @docType data
-#' @family datasets
+#' @keywords datasets
 #' @aliases potato.quipu
 NULL
 
 
 
 
-library(pixmap)
+#library(pixmap)
 
 #' Creates quipu-type charts for a set of SSR markers
 #' 
@@ -49,7 +49,8 @@ library(pixmap)
 #' 
 #' The chart was motivated by the need to represent genetic uniqueness of potato plant materials in a given set
 #' for a catalogue and the Andean tradition of quipus.
-#'
+#' 
+#' @name rquipu
 #' @param accession a column from table containing accession ids: one for each marker size
 #' @param marker a column from table containing marker names: one for each marker size
 #' @param marker.size a column from a table containing marker sizes
@@ -145,8 +146,8 @@ rquipu <-  function (accession, marker, marker.size, map.location,
    nameclones1=paste("CIP",unique(datt$CIP.number))
    nameclones=paste(nameclones1,"                          ", sep="")
    
-   if(img.format=="jpeg") nameclones2=paste(dir.print,nameclones1,".jpg", sep="")
-   if(img.format=="png") nameclones2=file.path(dir.print, paste(nameclones1,".png", sep=""))
+   if(img.format=="jpeg") nameclones2=paste(dir.print,"/",nameclones1,".jpg", sep="")
+   if(img.format=="png") nameclones2=file.path(dir.print,"/", paste(nameclones1,".png", sep=""))
    
    for(j in 1:length(clones))
    {

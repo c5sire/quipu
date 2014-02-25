@@ -22,4 +22,4 @@ Genebanks increasingly use molecular markers for routine
     
 A sample image from the example data:
 
-![Sample quipu image](img/sample.1.png)
+![Sample quipu image](img/sample.1.jpg)
