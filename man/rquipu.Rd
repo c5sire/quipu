@@ -7,7 +7,8 @@ rquipu(accession, marker, marker.size, map.location, ylim = c(50, 350),
   dir.logo = system.file("pictures/logo.ppm", package = "pixmap")[1],
   col.fig = c("red3", "gray30", "gray40", "gray50"), col.marg = c("gray60",
   "black", "black"), species.name = NA, set.name = NA,
-  img.format = c("jpeg", "png"), id.prefix = "")
+  img.format = c("jpeg", "png"), id.prefix = "", ltr.size = 0.8,
+  show.accs.total = TRUE)
 }
 \arguments{
   \item{accession}{a column from table containing accession
@@ -47,6 +48,11 @@ rquipu(accession, marker, marker.size, map.location, ylim = c(50, 350),
   (jpeg or png)}
 
   \item{id.prefix}{a prefix for the accession id}
+
+  \item{ltr.size}{letter size}
+
+  \item{show.accs.total}{a logical value to show the number
+  of accessions from the dataset}
 }
 \description{
 The chart shows SSR marker weights on a linear scale where
@@ -65,12 +71,22 @@ library(quipu)
 data("potato.quipu", package="quipu")
 
 dat = potato.quipu
+
+# Load your data: uncomment the following two lines:
+
+# fn = file.choose()
+# dat= read.csv(fn)
+
+
 width = 1500
 height = 1000
 
 rquipu(dat$accession_id, dat$primer_name, dat$marker_size, dat$map_location,
        species.name="Solanum tuberosum", set.name="Advanced clones",res=c(width,height),
        dir.print = tempdir())
+
+
+
 }
 \author{
 Reinhard Simon, Pablo Carhuapoma
