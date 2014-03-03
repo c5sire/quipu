@@ -158,13 +158,15 @@ rquipu <-  function (accession, marker, marker.size, map.location,
      if(img.format=="jpeg") jpeg(nameclones2[j],quality = 100,width = res[1], height = res[2],pointsize = 22)
      if(img.format=="png") png(nameclones2[j],width = res[1], height = res[2],pointsize = 22)
      plot(1:length(mrcs),seq(min(grup1$Marker.size), max(grup1$Marker.size), length.out=length(mrcs)),
-          type="n",axes=FALSE,ylab=list("Position bp",cex=0.5),xlab=list("Chromosomes/SSR Name                                          ",cex=0.5),
+          type="n",axes=FALSE,ylab=list("Allele size",cex=0.7),
+          #xlab=list("Chromosomes/SSR Name                                          ",cex=0.7, outer=TRUE),
+          xlab="",
           main=c(paste("Accession number:",nameclones[j]),""," "),
           cex.main=0.8,xlim=c(1,length(mrcs)+7),ylim=ylim)
-     
-     axis(2,seq(ylim[1],ylim[2],25),lwd=1.2,cex.axis=0.5,las=2, col=col.marg[2])  
-     axis(3,at=1:length(mrcs),lab=1:length(mrcs),lwd=1.2,cex.axis=0.5, col=col.marg[3])
-     axis(1, col = col.marg[1],at=1:length(mrcs) ,lab=mrcs,lty = 2, lwd = 1.2, cex.axis=0.5, las=2)
+     mtext("                                                                                                                   Chromosomes/SSR name", cex=0.7, side=1, line=4, adj=0)
+     axis(2,seq(ylim[1],ylim[2],25),lwd=1.2,cex.axis=0.7,las=2, col=col.marg[2])  
+     axis(3,at=1:length(mrcs),lab=1:length(mrcs),lwd=1.2,cex.axis=0.7, col=col.marg[3])
+     axis(1, col = col.marg[1],at=1:length(mrcs) ,lab=mrcs,lty = 2, lwd = 1.2, cex.axis=0.7, las=2)
      
      
      ##abline(h = seq(ylim[1],ylim[2],25), v = 0, lty = 3, lwd = .1, col = "gray78")
@@ -199,17 +201,23 @@ rquipu <-  function (accession, marker, marker.size, map.location,
      
      
      ## one legend
-     legend(length(mrcs)+0.7, ylim[2], c("0% - 1%", "1% - 5%", "5% - 10%","10% - .."), col = c(col.fig[1],col.fig[2],col.fig[3],col.fig[4]),
+     legend(length(mrcs)+0.7, ylim[2], c("0% - 1%", "1% - 5%", "5% - 10%","10% - 100%"), col = c(col.fig[1],col.fig[2],col.fig[3],col.fig[4]),
             text.col = "gray1", lty = c(1,1,1,1), pch = c(16,16,16,16), merge = TRUE,pt.cex=c(1.5,1.2,0.9,0.6),
-            cex=0.57,title="Allele frequency     ")
+            cex=0.7,title="Allele frequency     ")
      if(interactive()) cat(paste(j,":\t",nameclones2[j],"\n",sep=""))
      ## two legend
      d1=species.name
      d2=set.name
      d3=date()
      d4=length(mrcs)
-     imp=c("Species Name:",d1,"","Set Name:",d2,"","Evaluation Date:",d3,"","Total Genotypes:",d4,"")
-     legend(length(mrcs)+0.7,ylim[2]-60,imp,pch="",cex=0.54, title="Description") 
+     d5=length(clones)
+     imp=c("Species Name:",d1,"","Set Name:",d2,"",
+           "Total Markers:",d4,"",
+           "Total Genotypes:",d5,"",
+           "Evaluation Date:",d3,"")
+     mrk.cex = 0.54
+     mrk.cex = 0.7
+     legend(length(mrcs)+0.7,ylim[2]-60,imp,pch="",cex=mrk.cex, title="Description") 
      
      addlogo(x, px=c(length(mrcs)+0.7,length(mrcs)+6.5), py=c(70,125))
      dev.off()
