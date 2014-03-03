@@ -67,6 +67,7 @@ NULL
 #' @param id.prefix a prefix for the accession id
 #' @param ltr.size letter size 
 #' @param show.accs.total a logical value to show the number of accessions from the dataset
+#' @param id.label label for identifier
 #' @example inst/examples/rquipu.R
 #' @author Reinhard Simon, Pablo Carhuapoma
 #' @aliases rquipu
@@ -83,7 +84,8 @@ rquipu <-  function (accession, marker, marker.size, map.location,
             img.format = c("jpeg","png"),
             id.prefix = "",
             ltr.size = 0.8,
-            show.accs.total = TRUE)
+            show.accs.total = TRUE,
+            id.label = "Identifier")
   {
     options(warn = -1)
     
@@ -168,7 +170,7 @@ rquipu <-  function (accession, marker, marker.size, map.location,
           type="n",axes=FALSE,ylab=list("Allele size [bp]",cex=ltr.size),
           #xlab=list("Chromosomes/SSR Name                                          ",cex=0.7, outer=TRUE),
           xlab="",
-          main=c(paste("Accession number:",nameclones[j]),""," "),
+          main=c(paste(id.label,": ",nameclones[j], sep=""),""," "),
           cex.main=0.9,xlim=c(1,length(mrcs)+7),ylim=ylim)
      mtext("                                                                                           Chromosomes/SSR name", cex=ltr.size, side=1, line=4, adj=0)
      axis(2,seq(ylim[1],ylim[2],25),lwd=1.2,cex.axis=ltr.size,las=2, col=col.marg[2])  
@@ -201,7 +203,7 @@ rquipu <-  function (accession, marker, marker.size, map.location,
        points(rep(i,nrow(pt1)),pt1[,3],pch=16,col=pt1[,6],cex=pt1[,5])
        rom=moda(pt1[,4])[1]   
        if(nchar(rom)>6){rom="unknw"}
-       text(i,(ylim[1]-5),as.factor(rom),cex=0.5)
+       text(i,(ylim[1]-5),as.factor(rom),cex=ltr.size)
        
        cmp = rom
      }
@@ -221,7 +223,7 @@ rquipu <-  function (accession, marker, marker.size, map.location,
      if(show.accs.total ){
      imp=c("Species Name:",d1,"","Set Name:",d2,"",
            "Total Markers:",d4,"",
-           "Total Accessions:",d5,"",
+           "Total Genotypes:",d5,"",
            "Evaluation Date:",d3,"")
      } else {
        imp=c("Species Name:",d1,"","Set Name:",d2,"",
