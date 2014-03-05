@@ -43,17 +43,31 @@ NULL
 
 
 library(stringr)
+library(agricolae)
+
+assert <- function (expr, error) {
+  if (! expr) stop(error, call. = FALSE)
+}
+
 
 #library(pixmap)
 
 #' Creates quipu-type charts for a set of SSR markers
 #' 
 #' The chart shows SSR marker weights on a linear scale where each allele or 'gel band' is represented 
-#' by a circle. The circle's diameter is sized inversely by its rareness within the set of accessions 
-#' in the database at hand
+#' by a circle. The circle's diameter can be sized and colored by its rareness. Two parameters 'col.fig' and
+#' 'grp.size'allow to do so. The 'rareness' can be calculated - by default - based only on the dataset
+#' at hand or by a supplied reference table. To do so, the parameter 'obs.alls.frq' expects a dataframe with
+#' three columns named 'Marker', 'Marker.Size' and 'Frequency'. Another parameter, 'obs.alls.frq.ref'
+#' should be used to supply a character string containing the reference to the source of allele
+#' frequencies being used. For visualization purposes, the class breaks can be defined using a
+#' vector of three numeric values in the range between 0 and 1 and be passed to the parameter
+#' 'grp.brks'. The default is 0.01, 0.05 and 0.001.
 #' 
 #' The chart was motivated by the need to represent genetic uniqueness of potato plant materials in a given set
 #' for a catalogue and the Andean tradition of quipus.
+#' 
+#' 
 #' 
 #' @name rquipu
 #' @param accession a column from table containing accession ids: one for each marker size
@@ -73,16 +87,20 @@ library(stringr)
 #' @param ltr.size letter size 
 #' @param show.accs.total a logical value to show the number of accessions from the dataset
 #' @param id.label label for identifier
+#' @param grp.size size of circle diameter for allele circles by frequency group
+#' @param grp.brks cut-off values between frequency groups; must be three values between 0 and 1 and in ascending order 
+#' @param obs.alls.frq observed allele frequencies; format three-column data frame with heads: Marker, Marker.Size, Frequency. 
+#' @param obs.alls.frq.ref a reference to the source of the allele frequencies
 #' @example inst/examples/rquipu.R
 #' @author Reinhard Simon, Pablo Carhuapoma
 #' @aliases rquipu
 #' @export
 rquipu <-  function (accession, marker, marker.size, map.location, 
             ylim = c(50,350), 
-            res=c(800,800),
+            res=c(1500,1200),
             dir.print = "D:",
             dir.logo = NA, 
-            col.fig = c("red3","gray30","gray40","gray50"), 
+            col.fig = c("red3","green","blue","gray50"), 
             col.marg = c("gray60","black","black"), 
             species.name = NA, 
             set.name = NA,
@@ -90,13 +108,31 @@ rquipu <-  function (accession, marker, marker.size, map.location,
             id.prefix = "",
             ltr.size = 0.8,
             show.accs.total = TRUE,
-            id.label = "Identifier")
+            id.label = "Identifier",
+            grp.size = c(1.5, 1.2, 0.9, 0.6),
+            grp.brks = c(0.01, 0.05, 0.1),
+            obs.alls.frq = NULL,
+            obs.alls.frq.ref = "dataset"
+)
   {
+  stopifnot(all(is.vector(col.fig), is.character(col.fig), length(col.fig)==4))
+  stopifnot(all(col.fig %in% colors()))
+  
+  stopifnot(all(is.vector(grp.brks), is.numeric(grp.brks), length(grp.brks)==3))
+  stopifnot(all(grp.brks[1] > 0, grp.brks[2] > grp.brks[1], grp.brks[3] > grp.brks[2], 1>grp.brks[3] ) )
+  
+  stopifnot(all(is.vector(grp.size)))
+  
+  if(!is.null(obs.alls.frq)){
+    stopifnot(all(class(obs.alls.frq)=="data.frame", 
+                  names(obs.alls.frq) %in% c("Marker", "Marker.Size", "Frequency"))
+              )
+    stopifnot(all(is.numeric(obs.alls.frq$Frequency), 
+                  0 < min(obs.alls.frq$Frequency), 
+                  max(obs.alls.frq$Frequency < 1) ))
+  }
+  
     options(warn = -1)
-    
-    #ltr.size = 0.8
-    
-    #try({
       CLON = accession
       MARK = marker
       SIZE = marker.size
@@ -157,17 +193,38 @@ rquipu <-  function (accession, marker, marker.size, map.location,
        alls.fr[str_detect(names(alls.fr),pn)]/alls.to[[pn]]
    }
 
+   alls.range=NULL
+   if(!is.null(obs.alls.frq)){
+     Alleles = paste(obs.alls.frq$Marker, obs.alls.frq$Marker.Size, sep=".")
+     obs.fr = cbind(Alleles, obs.alls.frq$Frequency)
+     row.names(obs.fr) = Alleles
+     ofr = table(obs.fr[,1])
+     ofr = obs.fr[,2]
+     
+     assert(all(names(alls.fr) %in% names(ofr)),
+            paste( 
+              paste(names(alls.fr)[!(names(alls.fr) %in% names(ofr))],collapse=", "), 
+              "is/are missing in your reference file of allele frequencies." )
+            )
+     alls.fr = ofr
+     alls.range = tapply.stat(obs.alls.frq[,"Marker.Size"], obs.alls.frq[,"Marker"], min)
+     alls.range = cbind(alls.range,
+                        tapply.stat(obs.alls.frq[,"Marker.Size"], obs.alls.frq[,"Marker"], max)[2])
+     names(alls.range) = c("Marker","min","max")
+   }
+
+
    #print(str(alls.fr))
    for(r in 1:nrow(datt)){
      #print(str(datt))
      an = paste(datt$primer_name_original[r],datt$Marker.size[r],sep=".")
      #print(an)
-     ra = alls.fr[[an]]
+     ra = as.numeric(alls.fr[[an]])
      
-     if(ra< (0.01))              {datt[r,5]=1.5; datt[r,6]=col.fig[1]}
-     if(ra>= (0.01) & ra< (0.05)){datt[r,5]=1.2; datt[r,6]=col.fig[2]}
-     if(ra>= (0.05) & ra< (0.1)) {datt[r,5]=0.9; datt[r,6]=col.fig[3]}
-     if(ra>= (0.1))              {datt[r,5]=0.6; datt[r,6]=col.fig[4]}
+     if(ra<  (grp.brks[1]))                    {datt[r,5]=grp.size[1]; datt[r,6]=col.fig[1]}
+     if(ra>= (grp.brks[1]) & ra< (grp.brks[2])){datt[r,5]=grp.size[2]; datt[r,6]=col.fig[2]}
+     if(ra>= (grp.brks[2]) & ra< (grp.brks[3])){datt[r,5]=grp.size[3]; datt[r,6]=col.fig[3]}
+     if(ra>= (grp.brks[3]))                    {datt[r,5]=grp.size[4]; datt[r,6]=col.fig[4]}
      #print(paste(r, ra, datt[r,5],sep=" "))
    }
 
@@ -233,7 +290,18 @@ rquipu <-  function (accession, marker, marker.size, map.location,
      for(i in 1:length(mrcs))
      {pt0=datt[datt$primer_name_original==mrcs[i],]
       lines(c(i,i),c(min(pt0$Marker.size),ylim[2]),lty=1,lwd=2,col="gray90",type = "l")  # line one
-      lines(c(i,i),c(min(pt0$Marker.size),max(pt0$Marker.size)),lty=1,lwd=4,col="gray80",type = "l")
+      
+      if(!is.null(obs.alls.frq)){
+        lines(c(i,i),
+              c(alls.range[alls.range$Marker == mrcs[i],"min"],
+              alls.range[alls.range$Marker == mrcs[i],"max"]),
+              #max(pt0$Marker.size)),
+              lty=1,lwd=4,col="gray80", type = "l")  
+      } else {
+        lines(c(i,i),c(min(pt0$Marker.size),max(pt0$Marker.size)),lty=1,lwd=4,col="gray80",type = "l")  
+      }
+      
+     
      }
      
      cmp="inicio"
@@ -249,7 +317,11 @@ rquipu <-  function (accession, marker, marker.size, map.location,
           lines(c(i-1,i),c(ylim[2],ylim[2]),lty=1,lwd=2,col="gray90",type = "l")
         }
        
-       points(rep(i,nrow(pt1)),pt1[,3],pch=16,col=pt1[,6],cex=pt1[,5])
+        #sort alleles first by decreasing size
+        pt1 = pt1[order(pt1[,5], decreasing = TRUE), ]
+        points(rep(i,nrow(pt1)),pt1[,3],pch=16,col=pt1[,6],cex=pt1[,5])
+       
+        
        if(is.null(rom)){#} | nchar(rom)>6 ) {
          rom="unknw"
        }
@@ -261,8 +333,14 @@ rquipu <-  function (accession, marker, marker.size, map.location,
      
      
      ## one legend
-     legend(length(mrcs)+0.7, ylim[2], c("0% - 1%", "1% - 5%", "5% - 10%","10% - 100%"), col = c(col.fig[1],col.fig[2],col.fig[3],col.fig[4]),
-            text.col = "gray1", lty = c(1,1,1,1), pch = c(16,16,16,16), merge = TRUE,pt.cex=c(1.5,1.2,0.9,0.6),
+     legend(length(mrcs)+0.7, ylim[2], 
+            c(paste("0% - ",                        round(grp.brks[1]*100,0),"%", sep=""), 
+              paste(round(grp.brks[1]*100,0),"% - ",round(grp.brks[2]*100,0),"%", sep=""), 
+              paste(round(grp.brks[2]*100,0),"% - ",round(grp.brks[3]*100,0),"%", sep=""), 
+              paste(round(grp.brks[3]*100,0),"% - 100%", sep="")), 
+            col = c(col.fig[1],col.fig[2],col.fig[3],col.fig[4]),
+            text.col = "gray1", lty = c(1,1,1,1), pch = c(16,16,16,16), merge = TRUE,
+            pt.cex=grp.size,
             cex=ltr.size,title="Allele frequency     ")
      if(interactive()) cat(paste(j,":\t",nameclones2[j],"\n",sep=""))
      ## two legend
@@ -274,11 +352,14 @@ rquipu <-  function (accession, marker, marker.size, map.location,
      if(show.accs.total ){
      imp=c("Species Name:",d1,"","Set Name:",d2,"",
            "Total Markers:",d4,"",
+           
            "Total Genotypes:",d5,"",
+           "Source of allele frq:",obs.alls.frq.ref,"",
            "Evaluation Date:",d3,"")
      } else {
        imp=c("Species Name:",d1,"","Set Name:",d2,"",
              "Total Markers:",d4,"",
+             "Source of allele frq:",obs.alls.frq.ref,"",
              "Evaluation Date:",d3,"")
      }
      legend(length(mrcs)+0.7,ylim[2]-60,imp,pch="",cex=ltr.size, title="Description") 
