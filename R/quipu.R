@@ -41,6 +41,21 @@ NULL
 #' @aliases potato.quipu
 NULL
 
+#' @name allele.freqs
+#' @title Sample allele frequencies
+#' @format Tabular format. The records represent unique SSR alleles with their assigned frequencies. 
+#' Frequencies were derived from the sample data and are just for illustrative purposes.
+#' \itemize{
+#'  \item{"marker"} {Marker name}
+#'  \item{"marker_size"} {Marker size}
+#'  \item{"frequency"} {A fraction between 0 and 1.}
+#' }
+#' @docType data
+#' @keywords datasets
+#' @aliases llele.freqs
+NULL
+
+
 
 library(stringr)
 library(agricolae)
@@ -70,15 +85,13 @@ assert <- function (expr, error) {
 #' 
 #' 
 #' @name rquipu
-#' @param accession a column from table containing accession ids: one for each marker size
-#' @param marker a column from table containing marker names: one for each marker size
-#' @param marker.size a column from a table containing marker sizes
-#' @param map.location a column from table containing map locations of each marker: one for each marker size
+#' @param data a data.frame with minimal four columns: accession_id, primer_name, marker_size, map_location; alternatively, 
+#' @param a.subset a vector of accession identifiers
 #' @param ylim the range of marker sizes (or alleles) in base pair (bp) units
 #' @param res the resolution of the final image in pixels (width, height)
 #' @param dir.print the directory to use for storing the created images
 #' @param dir.logo the path to a logo to display on the chart
-#' @param col.fig colors for the chart elements
+#' @param col.node colors for the chart elements
 #' @param col.marg colors for the chart margin elements
 #' @param species.name scientific name of the species of the set of accessions
 #' @param set.name a name for the set of accessions
@@ -87,7 +100,7 @@ assert <- function (expr, error) {
 #' @param ltr.size letter size 
 #' @param show.accs.total a logical value to show the number of accessions from the dataset
 #' @param id.label label for identifier
-#' @param grp.size size of circle diameter for allele circles by frequency group
+#' @param node.size size of circle diameter for allele circles by frequency group
 #' @param grp.brks cut-off values between frequency groups; must be three values between 0 and 1 and in ascending order 
 #' @param obs.alls.frq observed allele frequencies; format three-column data frame with heads: Marker, Marker.Size, Frequency. 
 #' @param obs.alls.frq.ref a reference to the source of the allele frequencies
@@ -95,26 +108,36 @@ assert <- function (expr, error) {
 #' @author Reinhard Simon, Pablo Carhuapoma
 #' @aliases rquipu
 #' @export
-rquipu <-  function (accession, marker, marker.size, map.location, 
+rquipu <-  function (data,
+            #accession, marker, marker.size, map.location, 
+            a.subset = c("all"),
             ylim = c(50,350), 
             res=c(1500,1200),
-            dir.print = "D:",
+            dir.print = tempdir(),
             dir.logo = NA, 
-            col.fig = c("red3","green","blue","gray50"), 
+            col.node = c("red3","green","blue","gray50"), 
             col.marg = c("gray60","black","black"), 
             species.name = NA, 
             set.name = NA,
-            img.format = c("jpeg","png"),
+            img.format = c("screen","jpeg","jpg","png"),
             id.prefix = "",
             ltr.size = 0.8,
             show.accs.total = TRUE,
             id.label = "Identifier",
-            grp.size = c(1.5, 1.2, 0.9, 0.6),
+            node.size = c(1.5, 1.2, 0.9, 0.6),
             grp.brks = c(0.01, 0.05, 0.1),
             obs.alls.frq = NULL,
             obs.alls.frq.ref = "dataset"
 )
   {
+  grp.size = node.size
+  col.fig = col.node
+  assert(is.data.frame(data), "Data is not a data.frame")
+  assert(all(names(data) %in% c("accession_id", "primer_name","marker_size","map_location")),
+         "The data.frame does not contain the expected column names (see documentation).")
+  assert(nrow(data)>0,
+         "The data.frame does not contain sufficient data.")
+  
   stopifnot(all(is.vector(col.fig), is.character(col.fig), length(col.fig)==4))
   stopifnot(all(col.fig %in% colors()))
   
@@ -125,18 +148,29 @@ rquipu <-  function (accession, marker, marker.size, map.location,
   
   if(!is.null(obs.alls.frq)){
     stopifnot(all(class(obs.alls.frq)=="data.frame", 
-                  names(obs.alls.frq) %in% c("Marker", "Marker.Size", "Frequency"))
+                  names(obs.alls.frq) %in% c("marker", "marker_size", "frequency"))
               )
-    stopifnot(all(is.numeric(obs.alls.frq$Frequency), 
-                  0 < min(obs.alls.frq$Frequency), 
-                  max(obs.alls.frq$Frequency < 1) ))
+    stopifnot(all(is.numeric(obs.alls.frq$frequency), 
+                  0 < min(obs.alls.frq$frequency), 
+                  max(obs.alls.frq$frequency < 1) ))
   }
   
     options(warn = -1)
-      CLON = accession
-      MARK = marker
-      SIZE = marker.size
-      CROMOS = map.location
+      CLON = data$accession_id
+      MARK = data$primer_name
+      SIZE = data$marker_size
+      CROMOS = data$map_location
+  
+  
+   if(a.subset != "all")  {
+     assert(is.vector(a.subset), 
+            "The parameter 'a.subset' must be a vector.")
+     assert(is.character(a.subset), 
+            "The parameter 'a.subset' must be a vector of type 'character'.")
+     ss = a.subset %in% potato.quipu$accession_id
+     mss= paste(a.subset[!ss],collapse=", ")
+     assert(all(ss),paste("The dentifier(s): '",mss,"' is/are not in the database.", sep=""))
+   }
       
    dir=paste("In the folder ",dir.print,sep="")
    dat=data.frame(CIP.number=CLON,primer_name_original=MARK,Marker.size=SIZE,Cromosomas=CROMOS)
@@ -195,8 +229,8 @@ rquipu <-  function (accession, marker, marker.size, map.location,
 
    alls.range=NULL
    if(!is.null(obs.alls.frq)){
-     Alleles = paste(obs.alls.frq$Marker, obs.alls.frq$Marker.Size, sep=".")
-     obs.fr = cbind(Alleles, obs.alls.frq$Frequency)
+     Alleles = paste(obs.alls.frq$marker, obs.alls.frq$marker_size, sep=".")
+     obs.fr = cbind(Alleles, obs.alls.frq$frequency)
      row.names(obs.fr) = Alleles
      ofr = table(obs.fr[,1])
      ofr = obs.fr[,2]
@@ -207,9 +241,9 @@ rquipu <-  function (accession, marker, marker.size, map.location,
               "is/are missing in your reference file of allele frequencies." )
             )
      alls.fr = ofr
-     alls.range = tapply.stat(obs.alls.frq[,"Marker.Size"], obs.alls.frq[,"Marker"], min)
+     alls.range = tapply.stat(obs.alls.frq[,"marker_size"], obs.alls.frq[,"marker"], min)
      alls.range = cbind(alls.range,
-                        tapply.stat(obs.alls.frq[,"Marker.Size"], obs.alls.frq[,"Marker"], max)[2])
+                        tapply.stat(obs.alls.frq[,"marker_size"], obs.alls.frq[,"marker"], max)[2])
      names(alls.range) = c("Marker","min","max")
    }
 
@@ -246,13 +280,17 @@ rquipu <-  function (accession, marker, marker.size, map.location,
    }
    }
    
+   if(a.subset != "all"){
+     datt = datt[datt$CIP.number %in% a.subset, ]
+   }
+
    
    clones=unique(datt$CIP.number)
    nameclones1=paste("CIP",unique(datt$CIP.number))
    nameclones=paste(nameclones1,"                          ", sep="")
    
-   if(img.format=="jpeg") nameclones2=paste(dir.print,"/",nameclones1,".jpg", sep="")
-   if(img.format=="png") nameclones2=file.path(dir.print,"/", paste(nameclones1,".png", sep=""))
+   if(img.format %in% c("jpeg","jpg")) nameclones2=file.path(dir.print, paste(nameclones1,".jpg", sep=""))
+   if(img.format=="png")  nameclones2=file.path(dir.print, paste(nameclones1,".png", sep=""))
    
    mrcs=unique(datt$primer_name_original) 
    
@@ -262,7 +300,7 @@ rquipu <-  function (accession, marker, marker.size, map.location,
      #mrcs=unique(grup1$primer_name_original) 
      
      ## print image 
-     if(img.format=="jpeg") jpeg(nameclones2[j],quality = 100,width = res[1], height = res[2],pointsize = 22)
+     if(img.format %in% c("jpeg","jpg")) jpeg(nameclones2[j],quality = 100,width = res[1], height = res[2],pointsize = 22)
      if(img.format=="png") png(nameclones2[j],width = res[1], height = res[2],pointsize = 22)
      
      par(mar = c(6,4,4,2)+0.1)
@@ -272,7 +310,7 @@ rquipu <-  function (accession, marker, marker.size, map.location,
           xlab="",
           main=c(paste(id.label,": ",nameclones[j], sep=""),""," "),
           cex.main=0.9,xlim=c(1,length(mrcs)+7),ylim=ylim)
-     mtext("                                                                                      Chromosomes/SSR name", 
+     mtext("                                                 Chromosomes/SSR name", 
            cex=ltr.size, side=1, line=5, adj=0)
      axis(2,seq(ylim[1],ylim[2],25),lwd=1.2,cex.axis=ltr.size,las=2, col=col.marg[2])  
      axis(3,at=1:length(mrcs),labels=1:length(mrcs),lwd=1.2,cex.axis=ltr.size, col=col.marg[3])
@@ -342,7 +380,7 @@ rquipu <-  function (accession, marker, marker.size, map.location,
             text.col = "gray1", lty = c(1,1,1,1), pch = c(16,16,16,16), merge = TRUE,
             pt.cex=grp.size,
             cex=ltr.size,title="Allele frequency     ")
-     if(interactive()) cat(paste(j,":\t",nameclones2[j],"\n",sep=""))
+     if(interactive() & img.format!="screen") cat(paste(j,":\t",nameclones2[j],"\n",sep=""))
      ## two legend
      d1=species.name
      d2=set.name
@@ -351,24 +389,24 @@ rquipu <-  function (accession, marker, marker.size, map.location,
      d5=length(clones)
      if(show.accs.total ){
      imp=c("Species Name:",d1,"","Set Name:",d2,"",
-           "Total Markers:",d4,"",
+           #"Total Markers:",d4,"",
            
            "Total Genotypes:",d5,"",
            "Source of allele frq:",obs.alls.frq.ref,"",
            "Evaluation Date:",d3,"")
      } else {
        imp=c("Species Name:",d1,"","Set Name:",d2,"",
-             "Total Markers:",d4,"",
+            # "Total Markers:",d4,"",
              "Source of allele frq:",obs.alls.frq.ref,"",
              "Evaluation Date:",d3,"")
      }
-     legend(length(mrcs)+0.7,ylim[2]-60,imp,pch="",cex=ltr.size, title="Description") 
+     legend(length(mrcs)+0.7,ylim[2]-70,imp,pch="",cex=ltr.size-.2, title="Description") 
      
      if(!is.na(x)){
        addlogo(x, px=c(length(mrcs)+0.7,length(mrcs)+6.5), py=c(70,125))  
      }
      par(mar = c(5,4,4,2)+0.1)
-     dev.off()
+     if(img.format != "screen" ) dev.off()
    }
    options(warn=1)
   }

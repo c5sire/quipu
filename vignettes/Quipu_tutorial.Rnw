@@ -1,0 +1,189 @@
+%\VignetteIndexEntry{Quipu tutorial}
+%\VignetteEngine{knitr}
+
+\documentclass[spanish, english]{article}
+\usepackage[T1]{fontenc}
+\usepackage{selinput}
+\SelectInputMappings{%
+  aacute={á},
+  iacute={í},
+  oacute={ó},
+  uacute={ú},
+  ntilde={ñ}
+}
+
+\RequirePackage{Bioconductor}
+
+<<quipu,include=FALSE,echo=FALSE>>=
+options(keep.source = TRUE, width = 60)
+qp <- packageDescription("quipu")
+@
+
+
+%\renewcommand{\thetitle}{Quipu tutorial}
+
+
+\begin{document}
+
+\title{Quipu tutorial (Version \Sexpr{qp$Version})}
+\author{Reinhard Simon, Jorge Nuñez}
+\maketitle
+
+\tableofcontents 
+
+\section{Uses}
+Genebanks increasingly use molecular markers for routine
+characterization of ex-situ collections and farmer managed diversity. CIP's
+(International Potato Center) genebank presently uses a SSR marker-kit to
+produce molecular profiles for potato accessions. We have been searching
+for a compact graphical representation that shows both
+molecular diversity and accession characteristics - thus permitting
+biologists and collection curators to have a simpler way to interpret
+high-volume data. Inspired by the ancient Andean quipus we devised a graph
+that allows for standardized representation while leaving room for updates
+of the marker kit and the collection of accessions. The graph has been used
+in several CIP publications.
+
+Currently, the graph is designed for summarizing molecular diversity using SSR data.
+It shows the alleles present in an individual genotype and it allows to show the rare alleles using
+a combination of different sizes and colors for allele frequency classes. The allele classes have been fixed to four but cutoffs between classes may be defined freely. 
+Each SSR locus is represented by a vertical line (which also corresponds to a gel lane) and the y range is set by default to the typical minimum and maximum ranges of SSR alleles. The actual range size of alleles in bp is than marked by a thicker grey line - where the actual range is derived either from the dataset directly or an external allele reference table. Individual alleles are then plotted on top - larger sized alleles are plotted first to allow better visibility of close alleles. Allele frequencies are calculated based on the given dataset using simple counting or can be given using a pre-defined table. This is specially useful when sets of genotypes are published in different batches but all must refer to the same main database.
+
+The main routine has been designed so that it can be used in different settings: for interactive exploratory visualization or for creation of images in batch.
+
+\section{A quick example}
+
+The package \CRANpkg{quipu} comes with a small sample dataset.
+
+<<>>=
+library(quipu)
+library(xtable)
+data("potato.quipu", package="quipu")
+dat = potato.quipu
+@
+
+The allele table has the following format (showing only the first few records):
+
+<<echo=FALSE, results='asis' >>=
+xtable(head(dat))
+@
+Columns in the table must be named as shown above. The following snippet shows the most simple usage which will switch in interactive mode from image to image for each genotype (copy into your console).
+
+<<>>=
+if(interactive()) rquipu(dat)
+@
+
+
+To produce a single graph the following settings should be used:
+
+<<figureexample1>>=
+rquipu(dat, a.subset = "sample.1")
+@
+
+The 'a.subset' parameter recognizes also a vector of accession id's; e.g. \Rcode{c("sample.1", "sample.3")}.
+
+\section{Modifications}
+The \Rcode{rquipu} function has several parameters so the graph can be highly customized. The options can be grouped roughly into four groups by purpose: a) visualization, b) classification, c) database reference, and d) fine tuning legend options.
+
+\subsection{Changing visualization options: allele sizes and colors}
+The colors of the four node type representing the allele classes can be changed by setting the parameter \Rcode{col.node}. It has the following default values: \Rcode{c("red3","green","blue","gray50")}. It can be changed as in the following example:
+<<figureexample2>>=
+rquipu(dat, a.subset = "sample.1", 
+       col.node = c("darkred", "orange","green","black"))
+@
+A list of possible color names can be obtained in R using the command \Rcode{colors()}. The \Rcode{rquipu} function checks for allowed values.
+
+Likewise, the node size has a parameter \Rcode{node.size} with the following standard values: \Rcode{c(1.5, 1.2, 0.9, 0.6)}. Values may be changed as follows:
+<<figureexample3>>=
+rquipu(dat, a.subset = "sample.2", 
+       node.size = c(2, 1.5, 1, 0.5))
+@
+
+The size order is by default inverse to the rareness of an allele, but this can be changed. One may also combine both color assignmnet and node size together:
+
+<<figureexample4>>=
+rquipu(dat, a.subset = "sample.1", 
+       col.node = c("darkred", "orange","darkgreen","black"),
+       node.size = c(0.9, 1.2, 1.5, 1.8))
+@
+
+
+\subsection{Changing classification options: allele classification cutoffs}
+The default cut-off values between allele frequency classes were chosen to reflect the typical cut-off values used for p-values (\Rcode{c(0.01, 0.05, 0.1)}). However, this can be changed using the parameter \Rcode{grp.brks}
+
+<<figureexample5>>=
+rquipu(dat, a.subset = "sample.1", 
+       grp.brks = c(0.25, 0.5, 0.75))
+@
+
+Again, this parameter can be freely combined with others as in the following example to visualize the extreme 25 percent (this also shows that the node size parameters can be of equal size):
+
+<<figureexample6>>=
+rquipu(dat, a.subset = "sample.1",
+       col.node = c("darkred", "grey80","grey80","blue"),
+       node.size = c(0.9, 1.2, 1.2, 1.8),
+       grp.brks = c(0.25, 0.5, 0.75)
+       )
+@
+
+
+\subsection{Changing database options: allele frequencies}
+In some circumstances the simple counting of alleles from the supplied data.framne may not be adequate. The parameter \Rcode{obs.alls.frq} should then be used to supply a reference table. Also, for documentation purposes, another parameter \Rcode{obs.alls.frq.ref} should be used for registering a short name to the source, e.g. '[database name] [version number]'.
+<<>>=
+data("allele.freqs", package="quipu")
+@
+
+The frequency reference table has the following structure - again, column names must be given as shown.
+
+<<echo=FALSE, results='asis' >>=
+xtable(head(allele.freqs), digits = 4)
+@
+
+For illustration purposes we change the frequency of the third allele to a very rare one.
+
+<<>>=
+allele.freqs[3,3] <- 0.0001
+@
+
+
+<<echo=FALSE, results='asis' >>=
+xtable(head(allele.freqs), digits = 4)
+@
+
+
+<<figureexample7>>=
+rquipu(dat, a.subset = "sample.1", obs.alls.frq = allele.freqs)
+@
+
+In the case of using an external reference file for allele frequencies for consistency and reporting purposes also the range of the alleles for a locus should be taken from the external database. To illustrate this point we add an additional record as in the following example.
+
+<<>>=
+xx = rbind(c("STG0001", 300, 0.01), allele.freqs)
+xx$marker_size = as.integer(xx$marker_size)
+xx$frequency <- as.numeric(xx$frequency)
+@
+<<echo=FALSE, results='asis' >>=
+xtable(head(xx), digits = 4)
+@
+
+
+
+<<figureexample8>>=
+rquipu(dat, a.subset = "sample.1", 
+            obs.alls.frq = xx, 
+            obs.alls.frq.ref = "PotDb v1.0")
+@
+
+
+\subsection{Changing legend options: text and logo to show or hide}
+Lastly, some minor modifications may be used to remove text or add a logo to the legend area.
+By default, the 'Description' area shows the total number of accessions in the data.frame provided; this may be turned off using the parameter \Rcode{show.accs.total = FALSE}. Similarly, a path to a logo image may be provided using the parameter \Rcode{dir.logo}.
+
+Another important option is to create image files and direct them to a certain directory. The parameter \Rcode{img.format} can be used to produce images in either JPEG or PNG format; the parameter \Rcode{dir.print} to set the output directory.
+
+For the remaining parameters see the documentation.
+
+
+
+
+\end{document}
