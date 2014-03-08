@@ -59,13 +59,13 @@ NULL
 
 library(stringr)
 library(agricolae)
+library(pixmap)
 
 assert <- function (expr, error) {
   if (! expr) stop(error, call. = FALSE)
 }
 
 
-#library(pixmap)
 
 #' Creates quipu-type charts for a set of SSR markers
 #' 
@@ -162,7 +162,7 @@ rquipu <-  function (data,
       CROMOS = data$map_location
   
   
-   if(a.subset != "all")  {
+   if(!("all" %in% a.subset))  {
      assert(is.vector(a.subset), 
             "The parameter 'a.subset' must be a vector.")
      assert(is.character(a.subset), 
