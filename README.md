@@ -1,6 +1,19 @@
 quipu
 =====
 
+### First time installation
+
+```{r}
+install.packages("devtools")
+devtools::install_github("quipu", "c5sire")
+```
+
+### Usage
+```{r}
+library(quipu)
+
+example(rquipu)
+```
 
 Standardizing molecular diversity profiles of plant genetic resources using concepts from Andean quipus
 ---------------------
