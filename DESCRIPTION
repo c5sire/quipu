@@ -2,7 +2,7 @@ Package: quipu
 Type: Package
 Title: Creates summary charts of micro satellite profiles for a set of
     biological samples
-Version: 1.6.0
+Version: 1.7.0
 Date: 2014-03-07
 Author: Reinhard Simon, Pablo Carhuapoma, Stef de Haan, Marc Ghislain, Jorge
     Nunez, Rene Gomez, Felipe de Mendiburu, William Roca, Merideth Bonierbale
@@ -27,4 +27,5 @@ Depends:
     stats,
     agricolae,
     stringr,
-    pixmap
+    pixmap,
+    xtable

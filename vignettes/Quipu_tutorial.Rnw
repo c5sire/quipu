@@ -2,6 +2,7 @@
 %\VignetteEngine{knitr}
 
 \documentclass[spanish, english]{article}
+\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{selinput}
 \SelectInputMappings{%
@@ -24,6 +25,11 @@ qp <- packageDescription("quipu")
 
 
 \begin{document}
+
+<<include=FALSE>>=
+#opts_chunk$set(concordance=TRUE)
+@
+
 
 \title{Quipu tutorial (Version \Sexpr{qp$Version})}
 \author{Reinhard Simon, Jorge Nuñez}
@@ -176,13 +182,23 @@ rquipu(dat, a.subset = "sample.1",
 
 
 \subsection{Changing legend options: text and logo to show or hide}
-Lastly, some minor modifications may be used to remove text or add a logo to the legend area.
+Some minor modifications may be used to remove text or add a logo to the legend area.
 By default, the 'Description' area shows the total number of accessions in the data.frame provided; this may be turned off using the parameter \Rcode{show.accs.total = FALSE}. Similarly, a path to a logo image may be provided using the parameter \Rcode{dir.logo}.
 
 Another important option is to create image files and direct them to a certain directory. The parameter \Rcode{img.format} can be used to produce images in either JPEG or PNG format; the parameter \Rcode{dir.print} to set the output directory.
 
 For the remaining parameters see the documentation.
 
+\subsection{Simplified charts}
+Lastly, the parameter \Rcode{layout = "no text"} allows to draw q chart that only shows the graphic. This is meant for use in 
+catalogues where one may want to save space. Together with the parameter resolution the overall size can then also be reduced; e.g. \Rcode{res = c(600, 400)}.
+
+<<figureexample9, fig.width=6, fig.height=2>>=
+par( mfrow = c( 1, 3 ) )
+rquipu(dat, 
+       layout = "no text",
+       res = c(600, 400))
+@
 
 
 

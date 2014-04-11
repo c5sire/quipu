@@ -1,12 +1,10 @@
 library(quipu)
 
-data("potato.quipu", package="quipu")
-
+data(potato.quipu)
 dat = potato.quipu
 
-# Load your data: uncomment the following two lines:
-
-# fn = file.choose()
-# dat= read.csv(fn)
+str(dat)
 
 rquipu(dat)
+
+rquipu(dat, layout="no text", res=c(600,400))

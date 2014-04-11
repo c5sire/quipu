@@ -52,7 +52,7 @@ NULL
 #' }
 #' @docType data
 #' @keywords datasets
-#' @aliases llele.freqs
+#' @aliases allele.freqs
 NULL
 
 
@@ -63,6 +63,131 @@ library(pixmap)
 
 assert <- function (expr, error) {
   if (! expr) stop(error, call. = FALSE)
+}
+
+layout_large_plot <- function (mrcs, grup1, ltr.size, id.label, nameclones, j, ylim, col.marg) {
+  par(mar = c(6,4,4,2)+0.1)
+  plot(1:length(mrcs),seq(min(grup1$Marker.size), max(grup1$Marker.size), length.out=length(mrcs)),
+       type="n",axes=FALSE,ylab=list("Allele size [bp]",cex=ltr.size),
+       #xlab=list("Chromosomes/SSR Name                                          ",cex=0.7, outer=TRUE),
+       xlab="",
+       main=c(paste(id.label,": ",nameclones[j], sep=""),""," "),
+       cex.main=0.9,xlim=c(1,length(mrcs)+7),ylim=ylim)
+  mtext("                                                 Chromosomes/SSR name", 
+        cex=ltr.size, side=1, line=5, adj=0)
+  axis(2,seq(ylim[1],ylim[2],25),lwd=1.2,cex.axis=ltr.size,las=2, col=col.marg[2])  
+  axis(3,at=1:length(mrcs),labels=1:length(mrcs),lwd=1.2,cex.axis=ltr.size, col=col.marg[3])
+  axis(1, col = col.marg[1],at=1:length(mrcs) ,labels=mrcs,lty = 2, lwd = 1.2, cex.axis=ltr.size, las=2)
+  
+  # horizontal lines
+  for(i in seq(ylim[1],ylim[2],25))
+  {lines(c(1,length(mrcs)),c(i,i),lty=3,lwd=0.8,col="gray80")
+  } 
+}
+
+layout_small_plot <- function (mrcs, grup1, ltr.size, id.label, nameclones, j, ylim, col.marg) {
+  par(mar = c(0,0,0,0)+0.5)
+  plot(1:length(mrcs),seq(min(grup1$Marker.size), max(grup1$Marker.size), length.out=length(mrcs)),
+       type="n",axes=FALSE,ylab="",
+       xlab="",
+       main=""
+       )
+}
+
+
+draw_vertical_lines <- function( mrcs, datt, ylim, obs.alls.frq, alls.range, layout){
+  ## the vertical lines 
+  for(i in 1:length(mrcs))
+  {pt0=datt[datt$primer_name_original==mrcs[i],]
+   lines(c(i,i),c(min(pt0$Marker.size),ylim[2]),lty=1,lwd=2,col="gray90",type = "l")  # line one
+   
+   if(!is.null(obs.alls.frq)){
+     lines(c(i,i),
+           c(alls.range[alls.range$Marker == mrcs[i],"min"],
+             alls.range[alls.range$Marker == mrcs[i],"max"]),
+           #max(pt0$Marker.size)),
+           lty=1,lwd=4,col="gray80", type = "l")  
+   } else {
+     lines(c(i,i),c(min(pt0$Marker.size),max(pt0$Marker.size)),lty=1,lwd=4,col="gray80",type = "l")  
+   }
+  }
+  if(layout == "no text"){
+    abline(h=(ylim[2]-28))
+  }
+  
+}
+
+
+draw_nodes <- function(mrcs, grup1, datt, ylim, ltr.size){
+  cmp="inicio"
+  ## printing circles 
+  mrcs = as.character(mrcs)
+  for(i in 1:length(mrcs))
+  {
+    pt1=grup1[grup1$primer_name_original==mrcs[i],]
+    rom = as.character(datt[datt$primer_name_original == as.character(mrcs[i]),"Cromosomas"][1])
+    #print(pt1)
+    if(nrow(pt1)>0){
+      if(pt1[1,4]==cmp){
+        lines(c(i-1,i),c(ylim[2],ylim[2]),lty=1,lwd=2,col="gray90",type = "l")
+      }
+      
+      #sort alleles first by decreasing size
+      pt1 = pt1[order(pt1[,5], decreasing = TRUE), ]
+      points(rep(i,nrow(pt1)),pt1[,3],pch=16,col=pt1[,6],cex=pt1[,5])
+      
+      
+      if(is.null(rom)){#} | nchar(rom)>6 ) {
+        rom="unknw"
+      }
+    }
+    text(i,(ylim[1]-5),rom,cex=ltr.size)
+    
+    cmp = rom
+  }
+}
+
+
+draw_legend <- function(j, mrcs, ylim, grp.brks, col.fig, grp.size, ltr.size, img.format, 
+                        nameclones2, species.name, set.name, clones, show.accs.total,
+                        x, obs.alls.frq.ref){
+  ## one legend
+  legend(length(mrcs)+0.7, ylim[2], 
+         c(paste("0% - ",                        round(grp.brks[1]*100,0),"%", sep=""), 
+           paste(round(grp.brks[1]*100,0),"% - ",round(grp.brks[2]*100,0),"%", sep=""), 
+           paste(round(grp.brks[2]*100,0),"% - ",round(grp.brks[3]*100,0),"%", sep=""), 
+           paste(round(grp.brks[3]*100,0),"% - 100%", sep="")), 
+         col = c(col.fig[1],col.fig[2],col.fig[3],col.fig[4]),
+         text.col = "gray1", lty = c(1,1,1,1), pch = c(16,16,16,16), merge = TRUE,
+         pt.cex=grp.size,
+         cex=ltr.size,title="Allele frequency     ")
+  if(interactive() & img.format!="screen") cat(paste(j,":\t",nameclones2[j],"\n",sep=""))
+  ## two legend
+  d1=species.name
+  d2=set.name
+  d3=date()
+  d4=length(mrcs)
+  d5=length(clones)
+  if(show.accs.total ){
+    imp=c("Species Name:",d1,"","Set Name:",d2,"",
+          #"Total Markers:",d4,"",
+          
+          "Total Genotypes:",d5,"",
+          "Source of allele frq:",obs.alls.frq.ref,"",
+          "Evaluation Date:",d3,"")
+  } else {
+    imp=c("Species Name:",d1,"","Set Name:",d2,"",
+          # "Total Markers:",d4,"",
+          "Source of allele frq:",obs.alls.frq.ref,"",
+          "Evaluation Date:",d3,"")
+  }
+  legend(length(mrcs)+0.7,ylim[2]-70,imp,pch="",cex=ltr.size-.2, title="Description") 
+  
+  if(!is.na(x)){
+    addlogo(x, px=c(length(mrcs)+0.7,length(mrcs)+6.5), py=c(70,125))  
+  }
+  par(mar = c(5,4,4,2)+0.1)
+  
 }
 
 
@@ -104,6 +229,7 @@ assert <- function (expr, error) {
 #' @param grp.brks cut-off values between frequency groups; must be three values between 0 and 1 and in ascending order 
 #' @param obs.alls.frq observed allele frequencies; format three-column data frame with heads: Marker, Marker.Size, Frequency. 
 #' @param obs.alls.frq.ref a reference to the source of the allele frequencies
+#' @param layout whether a full chart or one without text; use 'full' or 'no text'.
 #' @example inst/examples/rquipu.R
 #' @author Reinhard Simon, Pablo Carhuapoma
 #' @aliases rquipu
@@ -127,7 +253,8 @@ rquipu <-  function (data,
             node.size = c(1.5, 1.2, 0.9, 0.6),
             grp.brks = c(0.01, 0.05, 0.1),
             obs.alls.frq = NULL,
-            obs.alls.frq.ref = "dataset"
+            obs.alls.frq.ref = "dataset",
+            layout=c("full", "no text")
 )
   {
   grp.size = node.size
@@ -191,29 +318,8 @@ rquipu <-  function (data,
    datos=data.frame(datos)
    dat=dat[order(datos[,5], datos[,2],datos[,3]),]
    
-#    c1=unique(dat$primer_name_original)
-#    c2=unique(dat$Marker.size)
-   
+  
    datt=data.frame(dat,peso=rep(0,nrow(dat)),color=rep(0,nrow(dat)))
-#    tot=nrow(datt)
-#    for(i in 1:length(c1))
-#    {dt1=datt[datt[,2]==c1[i],]
-#     if(nrow(dt1)!=0)
-#     {for(j in 1:length(c2))
-#     {dt2=dt1[dt1[,3]==c2[j],]
-#      if(nrow(dt2)!=0)
-#      {#print(dt2[,1:4])
-#       posi=rownames(dt2)
-#       ra=nrow(dt2) 
-#       if(ra< (0.01*tot)){datt[posi,5]=rep(1.5,nrow(dt2));datt[posi,6]=rep(col.fig[1],nrow(dt2))}
-#       if(ra>= (0.01*tot) & ra< (0.05*tot)){datt[posi,5]=rep(1.2,nrow(dt2));datt[posi,6]=rep(col.fig[2],nrow(dt2))}
-#       if(ra>= (0.05*tot) & ra< (0.1*tot)){datt[posi,5]=rep(0.9,nrow(dt2));datt[posi,6]=rep(col.fig[3],nrow(dt2))}
-#       if(ra > (0.1*tot)){datt[posi,5]=rep(0.6,nrow(dt2));datt[posi,6]=rep(col.fig[4],nrow(dt2))}
-#      } 
-#     }
-#     }
-#    } 
-   
    
    # Calculate allele frequency by locus or primer pair
    alls = paste(dat$primer_name ,dat$Marker.size,sep=".")
@@ -261,16 +367,6 @@ rquipu <-  function (data,
      if(ra>= (grp.brks[3]))                    {datt[r,5]=grp.size[4]; datt[r,6]=col.fig[4]}
      #print(paste(r, ra, datt[r,5],sep=" "))
    }
-
-   
-   
-   moda=function(x)
-   {
-     if(is.null(x)) cat(x)
-     m1=sort(table(x),decreasing=T)
-     moda=names(m1[m1==m1[1]])
-     return(moda)
-   }
    
    ## Graphic
    x = NA
@@ -302,112 +398,20 @@ rquipu <-  function (data,
      ## print image 
      if(img.format %in% c("jpeg","jpg")) jpeg(nameclones2[j],quality = 100,width = res[1], height = res[2],pointsize = 22)
      if(img.format=="png") png(nameclones2[j],width = res[1], height = res[2],pointsize = 22)
-     
-     par(mar = c(6,4,4,2)+0.1)
-     plot(1:length(mrcs),seq(min(grup1$Marker.size), max(grup1$Marker.size), length.out=length(mrcs)),
-          type="n",axes=FALSE,ylab=list("Allele size [bp]",cex=ltr.size),
-          #xlab=list("Chromosomes/SSR Name                                          ",cex=0.7, outer=TRUE),
-          xlab="",
-          main=c(paste(id.label,": ",nameclones[j], sep=""),""," "),
-          cex.main=0.9,xlim=c(1,length(mrcs)+7),ylim=ylim)
-     mtext("                                                 Chromosomes/SSR name", 
-           cex=ltr.size, side=1, line=5, adj=0)
-     axis(2,seq(ylim[1],ylim[2],25),lwd=1.2,cex.axis=ltr.size,las=2, col=col.marg[2])  
-     axis(3,at=1:length(mrcs),labels=1:length(mrcs),lwd=1.2,cex.axis=ltr.size, col=col.marg[3])
-     axis(1, col = col.marg[1],at=1:length(mrcs) ,labels=mrcs,lty = 2, lwd = 1.2, cex.axis=ltr.size, las=2)
-     
-     
-     ##abline(h = seq(ylim[1],ylim[2],25), v = 0, lty = 3, lwd = .1, col = "gray78")
-     # horizontal lines
-     for(i in seq(ylim[1],ylim[2],25))
-     {lines(c(1,length(mrcs)),c(i,i),lty=3,lwd=0.8,col="gray80")
-     }
-     
-     
-     ## the vertical lines 
-     for(i in 1:length(mrcs))
-     {pt0=datt[datt$primer_name_original==mrcs[i],]
-      lines(c(i,i),c(min(pt0$Marker.size),ylim[2]),lty=1,lwd=2,col="gray90",type = "l")  # line one
-      
-      if(!is.null(obs.alls.frq)){
-        lines(c(i,i),
-              c(alls.range[alls.range$Marker == mrcs[i],"min"],
-              alls.range[alls.range$Marker == mrcs[i],"max"]),
-              #max(pt0$Marker.size)),
-              lty=1,lwd=4,col="gray80", type = "l")  
-      } else {
-        lines(c(i,i),c(min(pt0$Marker.size),max(pt0$Marker.size)),lty=1,lwd=4,col="gray80",type = "l")  
-      }
-      
-     
-     }
-     
-     cmp="inicio"
-     ## printing circles 
-     mrcs = as.character(mrcs)
-     for(i in 1:length(mrcs))
-     {
-       pt1=grup1[grup1$primer_name_original==mrcs[i],]
-       rom = as.character(datt[datt$primer_name_original == as.character(mrcs[i]),"Cromosomas"][1])
-       #print(pt1)
-       if(nrow(pt1)>0){
-        if(pt1[1,4]==cmp){
-          lines(c(i-1,i),c(ylim[2],ylim[2]),lty=1,lwd=2,col="gray90",type = "l")
-        }
-       
-        #sort alleles first by decreasing size
-        pt1 = pt1[order(pt1[,5], decreasing = TRUE), ]
-        points(rep(i,nrow(pt1)),pt1[,3],pch=16,col=pt1[,6],cex=pt1[,5])
-       
-        
-       if(is.null(rom)){#} | nchar(rom)>6 ) {
-         rom="unknw"
-       }
-      }
-      text(i,(ylim[1]-5),rom,cex=ltr.size)
-      
-      cmp = rom
-     }
-     
-     
-     ## one legend
-     legend(length(mrcs)+0.7, ylim[2], 
-            c(paste("0% - ",                        round(grp.brks[1]*100,0),"%", sep=""), 
-              paste(round(grp.brks[1]*100,0),"% - ",round(grp.brks[2]*100,0),"%", sep=""), 
-              paste(round(grp.brks[2]*100,0),"% - ",round(grp.brks[3]*100,0),"%", sep=""), 
-              paste(round(grp.brks[3]*100,0),"% - 100%", sep="")), 
-            col = c(col.fig[1],col.fig[2],col.fig[3],col.fig[4]),
-            text.col = "gray1", lty = c(1,1,1,1), pch = c(16,16,16,16), merge = TRUE,
-            pt.cex=grp.size,
-            cex=ltr.size,title="Allele frequency     ")
-     if(interactive() & img.format!="screen") cat(paste(j,":\t",nameclones2[j],"\n",sep=""))
-     ## two legend
-     d1=species.name
-     d2=set.name
-     d3=date()
-     d4=length(mrcs)
-     d5=length(clones)
-     if(show.accs.total ){
-     imp=c("Species Name:",d1,"","Set Name:",d2,"",
-           #"Total Markers:",d4,"",
-           
-           "Total Genotypes:",d5,"",
-           "Source of allele frq:",obs.alls.frq.ref,"",
-           "Evaluation Date:",d3,"")
+     if(layout=="full"){
+       layout_large_plot(mrcs, grup1, ltr.size, id.label, nameclones, j, ylim, col.marg)
+       draw_legend(j, mrcs, ylim, grp.brks, col.fig, grp.size, ltr.size, img.format, nameclones2, species.name,
+                        set.name, clones, show.accs.total, x, obs.alls.frq.ref)       
      } else {
-       imp=c("Species Name:",d1,"","Set Name:",d2,"",
-            # "Total Markers:",d4,"",
-             "Source of allele frq:",obs.alls.frq.ref,"",
-             "Evaluation Date:",d3,"")
+       layout_small_plot(mrcs, grup1, ltr.size, id.label, nameclones, j, ylim, col.marg)
      }
-     legend(length(mrcs)+0.7,ylim[2]-70,imp,pch="",cex=ltr.size-.2, title="Description") 
+
+     draw_vertical_lines(mrcs, datt, ylim, obs.alls.frq, alls.range, layout)
+     draw_nodes(mrcs, grup1, datt, ylim, ltr.size)
      
-     if(!is.na(x)){
-       addlogo(x, px=c(length(mrcs)+0.7,length(mrcs)+6.5), py=c(70,125))  
-     }
-     par(mar = c(5,4,4,2)+0.1)
      if(img.format != "screen" ) dev.off()
    }
-   options(warn=1)
-  }
+  options(warn=1)
+  
+}
 

@@ -6,9 +6,16 @@
 The chart shows SSR marker weights on a linear scale where
 each allele or 'gel band' is represented by a circle. The
 circle's diameter is sized inversely by its rareness within
-the set of accessions in the database at hand.
+the set of accessions in the database at hand and within
+that locus. The purpose is to facilitate the visual
+screening and comparison of genotypes with regard to these
+two questions:
 }
 \details{
+What is the overall pattern of alleles in a genotype?
+
+Which genotypes have rare alleles?
+
 Motivation: Genebanks increasingly use molecular markers
 for routine characterization of ex-situ collections and
 farmer managed diversity. CIP's (International Potato
