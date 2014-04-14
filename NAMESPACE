@@ -1,2 +1,2 @@
-import(agricolae, stringr, pixmap, xtable)
 export(rquipu)
+export(runDemo)

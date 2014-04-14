@@ -57,8 +57,21 @@ Each SSR locus is represented by a vertical line (which also corresponds to a ge
 
 The main routine has been designed so that it can be used in different settings: for interactive exploratory visualization or for creation of images in batch.
 
-\section{A quick example}
+\section{Quick examples}
 
+\subsection{Demo}
+The package comes with an html-based demo. Copy the following code into your R console:
+
+<<>>=
+
+if(interactive()){
+  quipu::runDemo()  
+}
+@
+
+This demo shows the two main chart layouts and the effects of the principal parameters. 
+
+\subsection{Minimal interactive example}
 The package \CRANpkg{quipu} comes with a small sample dataset.
 
 <<>>=
