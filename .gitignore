@@ -3,3 +3,4 @@
 .RData
 .Rbuildignore
 quipu.Rproj
+/docs
