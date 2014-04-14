@@ -19,7 +19,7 @@ library(quipu)
 example(rquipu)
 ```
 
-![Tutorial](vignettes/Quipu_tutorial.pdf)
+[Tutorial](vignettes/Quipu_tutorial.pdf)
 
 Standardizing molecular diversity profiles of plant genetic resources using concepts from Andean quipus
 ---------------------
