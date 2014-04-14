@@ -19,7 +19,7 @@ library(quipu)
 example(rquipu)
 ```
 
-Right-click on link to download the [tutorial](vignettes/Quipu_tutorial.pdf).
+Right-click on link to download the [tutorial](https://github.com/c5sire/quipu/tree/master/inst/doc).
 
 Standardizing molecular diversity profiles of plant genetic resources using concepts from Andean quipus
 ---------------------
@@ -47,9 +47,9 @@ Genebanks increasingly use molecular markers for routine
     
 A sample image showing a fully annotated chart (parameter 'layout = "full"':
 
-![Sample quipu image](img/sample.1.jpg)
+![Sample quipu image](https://github.com/c5sire/quipu/tree/master/img/sample.1.jpg)
 
 A sample image showing a minimal chart (parameter 'layout = "no text"':
 
-![Sample quipu image](img/no_text.png)
+![Sample quipu image](https://github.com/c5sire/quipu/tree/master/img/no_text.png)
 
