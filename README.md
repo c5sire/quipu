@@ -43,6 +43,11 @@ Genebanks increasingly use molecular markers for routine
     of the marker kit and the collection of accessions. The graph has been used
     in several CIP publications.
     
-A sample image from the example data:
+A sample image showing a fully annotated chart (parameter 'layout = "full"':
 
 ![Sample quipu image](img/sample.1.jpg)
+
+A sample image showing a minimal chart (parameter 'layout = "no text"':
+
+![Sample quipu image](img/no_text.jpg)
+
