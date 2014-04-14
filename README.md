@@ -47,9 +47,9 @@ Genebanks increasingly use molecular markers for routine
     
 A sample image showing a fully annotated chart (parameter 'layout = "full"':
 
-![Sample quipu image](https://github.com/c5sire/quipu/blob/master/img/sample.1.jpg)
+![Sample quipu image](img/sample.1.jpg)
 
 A sample image showing a minimal chart (parameter 'layout = "no text"':
 
-![Sample quipu image](https://github.com/c5sire/quipu/blob/master/img/no_text.png)
+![Sample quipu image](img/no_text.png)
 
