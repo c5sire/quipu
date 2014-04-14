@@ -6,6 +6,12 @@ quipu
 install.packages("devtools")
 devtools::install_github("quipu", "c5sire")
 ```
+
+### Demo
+```{r}
+quipu::runDemo()
+```
+
 ### Usage
 ```{r}
 library(quipu)

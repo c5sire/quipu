@@ -60,6 +60,7 @@ NULL
 library(stringr)
 library(agricolae)
 library(pixmap)
+library(shiny)
 
 assert <- function (expr, error) {
   if (! expr) stop(error, call. = FALSE)
@@ -221,7 +222,6 @@ draw_legend <- function(j, mrcs, ylim, grp.brks, col.fig, grp.size, ltr.size, im
 #' @param species.name scientific name of the species of the set of accessions
 #' @param set.name a name for the set of accessions
 #' @param img.format specify a format for the final chart (jpeg or png)
-#' @param id.prefix a prefix for the accession id
 #' @param ltr.size letter size 
 #' @param show.accs.total a logical value to show the number of accessions from the dataset
 #' @param id.label label for identifier
@@ -246,7 +246,6 @@ rquipu <-  function (data,
             species.name = NA, 
             set.name = NA,
             img.format = c("screen","jpeg","jpg","png"),
-            id.prefix = "",
             ltr.size = 0.8,
             show.accs.total = TRUE,
             id.label = "Identifier",
@@ -415,3 +414,15 @@ rquipu <-  function (data,
   
 }
 
+#' Run a short interactive demo
+#' 
+#' Shows the two typical plots and the effects of the main parameters.
+#' 
+#' @aliases runDemo
+#' @author Reinhard Simon
+#' @example inst/examples/ex_runDemo.R
+#' @export
+#' 
+runDemo <- function() {
+  runApp(system.file("shiny", package = "quipu"))
+}
