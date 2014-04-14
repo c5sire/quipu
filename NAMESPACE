@@ -1,2 +1,3 @@
+import(agricolae, shiny, pixmap, xtable, stringr)
 export(rquipu)
 export(runDemo)

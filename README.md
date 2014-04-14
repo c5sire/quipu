@@ -24,7 +24,7 @@ Right-click on link to download the [tutorial](vignettes/Quipu_tutorial.pdf).
 Standardizing molecular diversity profiles of plant genetic resources using concepts from Andean quipus
 ---------------------
 
-Simon R*, Carhuapoma R, de Haan S, Ghislain M, Nuňez J, Zorilla C, Gomez R, de Mendiburu F, Roca W, Bonierbale M
+Simon R*, Carhuapoma R, Hualla V, de Haan S, Ghislain M, Nuňez J, Zorilla C, Gomez R, de Mendiburu F, Roca W, Bonierbale M
 
  The chart shows SSR marker weights on a linear scale where each allele or 'gel band' is represented by a circle. The circle's diameter is sized inversely by its rareness within the set of accessions in the database at hand and within that locus. The purpose is to facilitate the visual screening
 and comparison of genotypes with regard to these two questions:
