@@ -21,8 +21,9 @@ Description: Gene banks increasingly use molecular markers for routine
     accessions. The graph has been used in several catalogs of potatoes.
 Copyright: International Potato Center
 License: GPL-2
-LazyData: yes
 VignetteBuilder: knitr
+Suggests:
+    knitr
 Depends:
     R (>= 3.0.0),
     stats,

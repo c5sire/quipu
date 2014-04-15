@@ -1,5 +1,5 @@
 %\VignetteIndexEntry{Quipu tutorial}
-%\VignetteEngine{knitr}
+%\VignetteEngine{knitr::knitr}
 
 \documentclass[spanish, english]{article}
 \usepackage[utf8]{inputenc}
@@ -25,10 +25,6 @@ qp <- packageDescription("quipu")
 
 
 \begin{document}
-
-<<include=FALSE>>=
-#opts_chunk$set(concordance=TRUE)
-@
 
 
 \title{Quipu tutorial (Version \Sexpr{qp$Version})}

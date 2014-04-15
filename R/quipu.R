@@ -39,6 +39,7 @@ NULL
 #' @docType data
 #' @keywords datasets
 #' @aliases potato.quipu
+#' @export
 NULL
 
 #' @name allele.freqs
@@ -53,6 +54,7 @@ NULL
 #' @docType data
 #' @keywords datasets
 #' @aliases allele.freqs
+#' @export
 NULL
 
 
@@ -293,7 +295,7 @@ rquipu <-  function (data,
             "The parameter 'a.subset' must be a vector.")
      assert(is.character(a.subset), 
             "The parameter 'a.subset' must be a vector of type 'character'.")
-     ss = a.subset %in% potato.quipu$accession_id
+     ss = a.subset %in% data$accession_id
      mss= paste(a.subset[!ss],collapse=", ")
      assert(all(ss),paste("The dentifier(s): '",mss,"' is/are not in the database.", sep=""))
    }
