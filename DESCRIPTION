@@ -2,7 +2,7 @@ Package: quipu
 Type: Package
 Title: Summary charts of micro satellite profiles for a set of
     biological samples
-Version: 1.9.0
+Version: 1.9.1
 Date: 2014-04-15
 Copyright: International Potato Center
 Author: Reinhard Simon, Pablo Carhuapoma, Vilma Hualla, Stef de Haan, Marc

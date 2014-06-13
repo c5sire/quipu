@@ -68,7 +68,8 @@ assert <- function (expr, error) {
   if (! expr) stop(error, call. = FALSE)
 }
 
-layout_large_plot <- function (mrcs, grup1, ltr.size, id.label, nameclones, j, ylim, col.marg) {
+layout_large_plot <- function (mrcs, grup1, ltr.size, id.label, nameclones, j, ylim, col.marg,
+                               show.horizontal.lines=TRUE) {
   par(mar = c(6,4,4,2)+0.1)
   plot(1:length(mrcs),seq(min(grup1$Marker.size), max(grup1$Marker.size), length.out=length(mrcs)),
        type="n",axes=FALSE,ylab=list("Allele size [bp]",cex=ltr.size),
@@ -83,9 +84,12 @@ layout_large_plot <- function (mrcs, grup1, ltr.size, id.label, nameclones, j, y
   axis(1, col = col.marg[1],at=1:length(mrcs) ,labels=mrcs,lty = 2, lwd = 1.2, cex.axis=ltr.size, las=2)
   
   # horizontal lines
-  for(i in seq(ylim[1],ylim[2],25))
-  {lines(c(1,length(mrcs)),c(i,i),lty=3,lwd=0.8,col="gray80")
-  } 
+  if(show.horizontal.lines){
+    for(i in seq(ylim[1],ylim[2],25)) {
+      lines(c(1,length(mrcs)),c(i,i),lty=3,lwd=0.8,col="gray80")
+    } 
+    
+  }
 }
 
 layout_small_plot <- function (mrcs, grup1, ltr.size, id.label, nameclones, j, ylim, col.marg) {
@@ -98,20 +102,31 @@ layout_small_plot <- function (mrcs, grup1, ltr.size, id.label, nameclones, j, y
 }
 
 
-draw_vertical_lines <- function( mrcs, datt, ylim, obs.alls.frq, alls.range, layout){
+draw_vertical_lines <- function( mrcs, datt, ylim, obs.alls.frq, alls.range, layout,
+                                 line.width = 2,
+                                 show.size.range = TRUE
+                                 ){
   ## the vertical lines 
+  if(show.size.range) {
+    alls.width = (line.width + 2)  
+    alls.color = "grey80"
+  } else {
+    alls.width = line.width
+    alls.color = "grey90"
+  }
+  
   for(i in 1:length(mrcs))
   {pt0=datt[datt$primer_name_original==mrcs[i],]
-   lines(c(i,i),c(min(pt0$Marker.size),ylim[2]),lty=1,lwd=2,col="gray90",type = "l")  # line one
+   lines(c(i,i),c(min(pt0$Marker.size),ylim[2]),lty=1,lwd=line.width,col="gray90",type = "l")  # line one
    
    if(!is.null(obs.alls.frq)){
      lines(c(i,i),
            c(alls.range[alls.range$Marker == mrcs[i],"min"],
              alls.range[alls.range$Marker == mrcs[i],"max"]),
            #max(pt0$Marker.size)),
-           lty=1,lwd=4,col="gray80", type = "l")  
+           lty=1,lwd=alls.width,col="gray80", type = "l")  
    } else {
-     lines(c(i,i),c(min(pt0$Marker.size),max(pt0$Marker.size)),lty=1,lwd=4,col="gray80",type = "l")  
+     lines(c(i,i),c(min(pt0$Marker.size),max(pt0$Marker.size)),lty=1,lwd=alls.width,col="gray80",type = "l")  
    }
   }
   if(layout == "no text"){
@@ -232,6 +247,9 @@ draw_legend <- function(j, mrcs, ylim, grp.brks, col.fig, grp.size, ltr.size, im
 #' @param obs.alls.frq observed allele frequencies; format three-column data frame with heads: Marker, Marker.Size, Frequency. 
 #' @param obs.alls.frq.ref a reference to the source of the allele frequencies
 #' @param layout whether a full chart or one without text; use 'full' or 'no text'.
+#' @param show.size.range show or hide the allele size range on top of the vertical line
+#' @param show.horizontal.lines show or hide horizontal lines in the large layout
+#' @param vertical.lines.width line width of vertical lines; default is 2
 #' @example inst/examples/rquipu.R
 #' @author Reinhard Simon, Pablo Carhuapoma
 #' @aliases rquipu
@@ -255,7 +273,10 @@ rquipu <-  function (data,
             grp.brks = c(0.01, 0.05, 0.1),
             obs.alls.frq = NULL,
             obs.alls.frq.ref = "dataset",
-            layout=c("full", "no text")
+            layout=c("full", "no text"),
+            show.size.range = TRUE,
+            show.horizontal.lines = TRUE,
+            vertical.lines.width = 2
 )
   {
   grp.size = node.size
@@ -400,14 +421,17 @@ rquipu <-  function (data,
      if(img.format %in% c("jpeg","jpg")) jpeg(nameclones2[j],quality = 100,width = res[1], height = res[2],pointsize = 22)
      if(img.format=="png") png(nameclones2[j],width = res[1], height = res[2],pointsize = 22)
      if(layout=="full"){
-       layout_large_plot(mrcs, grup1, ltr.size, id.label, nameclones, j, ylim, col.marg)
+       layout_large_plot(mrcs, grup1, ltr.size, id.label, nameclones, j, ylim, col.marg, 
+                         show.horizontal.lines)
        draw_legend(j, mrcs, ylim, grp.brks, col.fig, grp.size, ltr.size, img.format, nameclones2, species.name,
                         set.name, clones, show.accs.total, x, obs.alls.frq.ref)       
      } else {
        layout_small_plot(mrcs, grup1, ltr.size, id.label, nameclones, j, ylim, col.marg)
      }
-
-     draw_vertical_lines(mrcs, datt, ylim, obs.alls.frq, alls.range, layout)
+     
+     draw_vertical_lines(mrcs, datt, ylim, obs.alls.frq, alls.range, layout, 
+                         vertical.lines.width,
+                         show.size.range)
      draw_nodes(mrcs, grup1, datt, ylim, ltr.size)
      
      if(img.format != "screen" ) dev.off()

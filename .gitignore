@@ -4,3 +4,4 @@
 .Rbuildignore
 quipu.Rproj
 /docs
+/inst/paper
