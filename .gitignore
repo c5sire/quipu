@@ -3,5 +3,7 @@
 .RData
 .Rbuildignore
 quipu.Rproj
+<<<<<<< HEAD
 docs
 man
+inst/paper
