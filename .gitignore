@@ -3,6 +3,6 @@
 .RData
 .Rbuildignore
 quipu.Rproj
-man/
-docs/
+docs
+man
 inst/paper
