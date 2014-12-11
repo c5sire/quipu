@@ -84,7 +84,7 @@ xtable(head(dat))
 @
 Columns in the table must be named as shown above. The following snippet shows the most simple usage which will switch in interactive mode from image to image for each genotype (copy into your console).
 
-<<>>=
+<<interactive>>=
 if(interactive()) rquipu(dat)
 @
 
@@ -102,13 +102,16 @@ The \Rcode{rquipu} function has several parameters so the graph can be highly cu
 
 \subsection{Changing visualization options: allele sizes and colors}
 The colors of the four node type representing the allele classes can be changed by setting the parameter \Rcode{col.node}. It has the following default values: \Rcode{c("red3","green","blue","gray50")}. It can be changed as in the following example:
+
 <<figureexample2>>=
 rquipu(dat, a.subset = "sample.1", 
        col.node = c("darkred", "orange","green","black"))
 @
+
 A list of possible color names can be obtained in R using the command \Rcode{colors()}. The \Rcode{rquipu} function checks for allowed values.
 
 Likewise, the node size has a parameter \Rcode{node.size} with the following standard values: \Rcode{c(1.5, 1.2, 0.9, 0.6)}. Values may be changed as follows:
+
 <<figureexample3>>=
 rquipu(dat, a.subset = "sample.2", 
        node.size = c(2, 1.5, 1, 0.5))
@@ -143,8 +146,10 @@ rquipu(dat, a.subset = "sample.1",
 
 
 \subsection{Changing database options: allele frequencies}
+
 In some circumstances the simple counting of alleles from the supplied data.framne may not be adequate. The parameter \Rcode{obs.alls.frq} should then be used to supply a reference table. Also, for documentation purposes, another parameter \Rcode{obs.alls.frq.ref} should be used for registering a short name to the source, e.g. '[database name] [version number]'.
-<<>>=
+
+<<allele.freqs>>=
 data("allele.freqs", package="quipu")
 @
 
