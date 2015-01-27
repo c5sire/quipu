@@ -1,6 +1,8 @@
 quipu
 =====
 
+[![Travis-CI Build Status](https://travis-ci.org/c5sire/quipu.png?branch=master)](https://travis-ci.org/c5sire/quipu)
+
 ### First time installation
 ```{r}
 install.packages("devtools")
