@@ -2,7 +2,7 @@ Package: quipu
 Type: Package
 Title: Summary Charts of Microsatellite Profiles for a Set of
     Biological Samples
-Version: 1.9.4
+Version: 1.9.5
 Date: 2014-12-09
 Authors@R: as.person(c(
     "Reinhard Simon (CIP) <R.SIMON@CGIAR.ORG> [aut, cre]",
@@ -28,6 +28,8 @@ Description: Gene banks increasingly use molecular markers for routine
     leaving room for updates of the marker kit and the collection of
     accessions. The graph has been used in several catalogs of potato native
     varieties.
+BugReports: https://github.com/c5sire/quipu
+Copyright: International Potato Center (CIP)
 License: MIT + file LICENSE
 VignetteBuilder: knitr
 Suggests:
