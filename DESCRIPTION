@@ -28,6 +28,7 @@ Description: Gene banks increasingly use molecular markers for routine
     leaving room for updates of the marker kit and the collection of
     accessions. The graph has been used in several catalogs of potato native
     varieties.
+URL: http://c5sire.github.io/quipu/
 BugReports: https://github.com/c5sire/quipu
 Copyright: International Potato Center (CIP)
 License: MIT + file LICENSE
