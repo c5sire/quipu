@@ -2,6 +2,7 @@ quipu
 =====
 
 [![Travis-CI Build Status](https://travis-ci.org/c5sire/quipu.png?branch=master)](https://travis-ci.org/c5sire/quipu)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/c5sire/quipu?branch=master)](https://ci.appveyor.com/project/c5sire/quipu)
 
 ### First time installation
 ```{r}
