@@ -118,16 +118,19 @@ draw_vertical_lines <- function( mrcs, datt, ylim, obs.alls.frq, alls.range, lay
   for(i in 1:length(mrcs)){
    pt0=datt[datt$primer_name_original==mrcs[i],]
    lines(c(i,i),c(min(pt0$Marker.size),ylim[2]),lty=1,lwd=line.width,col="gray90",type = "l")  # line one
-   
-   if(!is.null(obs.alls.frq)){
+    print(i)
+    print(length(mrcs))
+    print(mrcs[i])
+    print(alls.range)
+   # if(!is.null(obs.alls.frq)){
      lines(c(i,i),
            c(alls.range[alls.range$Marker == mrcs[i],"min"],
              alls.range[alls.range$Marker == mrcs[i],"max"]),
            #max(pt0$Marker.size)),
-           lty=1,lwd=alls.width,col="gray80", type = "l")  
-   } else {
-     lines(c(i,i),c(min(pt0$Marker.size),max(pt0$Marker.size)),lty=1,lwd=alls.width,col="gray80",type = "l")  
-   }
+           lty=1,lwd=alls.width,col="gray80", type = "l")
+   # } else {
+      #lines(c(i,i),c(min(pt0$Marker.size),max(pt0$Marker.size)),lty=1,lwd=alls.width,col="gray80",type = "l")  
+   # }
   }
   if(layout == "no text"){
     abline(h=(ylim[2]-28))
@@ -259,8 +262,7 @@ draw_legend <- function(j, mrcs, ylim, grp.brks, col.fig, grp.size, ltr.size, im
 #' @author Reinhard Simon, Pablo Carhuapoma
 #' @aliases rquipu
 #' @export
-rquipu <-  function (data,
-            #accession, marker, marker.size, map.location, 
+rquipu <-  function (data, #accession, marker, marker.size, map.location, 
             a.subset = c("all"),
             ylim = c(50,350), 
             res=c(1500,1200),
