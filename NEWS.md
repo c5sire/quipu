@@ -1,3 +1,10 @@
+Version 1.9.7
+
+Improvements
+===========
+- All marker lines are shown for each individual in a set
+
+
 Version 1.9.2
 
 Improvements

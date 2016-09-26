@@ -115,8 +115,8 @@ draw_vertical_lines <- function( mrcs, datt, ylim, obs.alls.frq, alls.range, lay
     alls.color = "grey90"
   }
   
-  for(i in 1:length(mrcs))
-  {pt0=datt[datt$primer_name_original==mrcs[i],]
+  for(i in 1:length(mrcs)){
+   pt0=datt[datt$primer_name_original==mrcs[i],]
    lines(c(i,i),c(min(pt0$Marker.size),ylim[2]),lty=1,lwd=line.width,col="gray90",type = "l")  # line one
    
    if(!is.null(obs.alls.frq)){
@@ -142,11 +142,16 @@ draw_nodes <- function(mrcs, grup1, datt, ylim, ltr.size){
   mrcs = as.character(mrcs)
   for(i in 1:length(mrcs))
   {
+    #print("Draw nodes")
+    #print(i)
+    
     pt1=grup1[grup1$primer_name_original==mrcs[i],]
     rom = as.character(datt[datt$primer_name_original == as.character(mrcs[i]),"Cromosomas"][1])
     #print(pt1)
-    if(nrow(pt1)>0){
-      if(pt1[1,4]==cmp){
+    if(nrow(pt1) > 0){
+      # print(pt1[1, 4])
+      # print(cmp)
+      if(!is.na(cmp) & pt1[1,4] == cmp){
         lines(c(i-1,i),c(ylim[2],ylim[2]),lty=1,lwd=2,col="gray90",type = "l")
       }
       
@@ -159,7 +164,7 @@ draw_nodes <- function(mrcs, grup1, datt, ylim, ltr.size){
         rom="unknw"
       }
     }
-    text(i,(ylim[1]-5),rom,cex=ltr.size)
+    text(i,(ylim[1]-5), rom, cex = ltr.size)
     
     cmp = rom
   }
@@ -321,8 +326,8 @@ rquipu <-  function (data,
      assert(all(ss),paste("The dentifier(s): '",mss,"' is/are not in the database.", sep=""))
    }
       
-   dir=paste("In the folder ",dir.print,sep="")
-   dat=data.frame(CIP.number=CLON,primer_name_original=MARK,Marker.size=SIZE,Cromosomas=CROMOS)
+   dir=paste("In the folder ", dir.print, sep="")
+   dat=data.frame(CIP.number=CLON, primer_name_original=MARK, Marker.size=SIZE, Cromosomas=CROMOS)
    
    ## sorting the data by level of chromosome
    dt2=data.frame(rm1=c("I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV","XVI","XVII","XVIII","XIX","XX"),
@@ -410,7 +415,9 @@ rquipu <-  function (data,
    if(img.format %in% c("jpeg","jpg")) nameclones2=file.path(dir.print, paste(nameclones1,".jpg", sep=""))
    if(img.format=="png")  nameclones2=file.path(dir.print, paste(nameclones1,".png", sep=""))
    
-   mrcs=unique(datt$primer_name_original) 
+   #mrcs=unique(datt$primer_name_original)
+   mrcs=unique(dat$primer_name_original) 
+   #print(mrcs)
    
    for(j in 1:length(clones))
    {
