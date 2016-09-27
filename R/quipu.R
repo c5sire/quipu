@@ -117,11 +117,16 @@ draw_vertical_lines <- function( mrcs, datt, ylim, obs.alls.frq, alls.range, lay
   
   for(i in 1:length(mrcs)){
    pt0=datt[datt$primer_name_original==mrcs[i],]
-   lines(c(i,i),c(min(pt0$Marker.size),ylim[2]),lty=1,lwd=line.width,col="gray90",type = "l")  # line one
-    print(i)
-    print(length(mrcs))
-    print(mrcs[i])
-    print(alls.range)
+   pms = pt0$Marker.size
+   if(nrow(pt0) == 0){
+     pms = min(alls.range[alls.range$Marker == mrcs[i],"min"])
+   }
+   lines(c(i,i),c(min(pms),ylim[2]),lty=1,lwd=line.width,col="gray90",type = "l")  # line one
+     # print(i)
+     # print(pt0)
+    # print(length(mrcs))
+    # print(mrcs[i])
+    # print(alls.range)
    # if(!is.null(obs.alls.frq)){
      lines(c(i,i),
            c(alls.range[alls.range$Marker == mrcs[i],"min"],
@@ -216,7 +221,18 @@ draw_legend <- function(j, mrcs, ylim, grp.brks, col.fig, grp.size, ltr.size, im
   
 }
 
-
+get_obs_freq <- function(tbl){
+  xx = paste0(tbl$primer_name, "_", tbl$marker_size)
+  xy = table(xx)/length(xx)
+  #zz = as.data.frame(cbind(Marker = names(xy), Frequency = as.numeric(xy)))
+  #Marker = stringr::str_split(names(xy), "_")
+  zz = matrix(unlist(Marker), ncol = 2, byrow = T)
+  zz = as.data.frame(cbind(zz, Frequency = as.numeric(xy)), stringsAsFactors = FALSE)
+  names(zz) = c("marker", "marker_size", "frequency")
+  zz[, 2] = as.integer(zz[, 2])
+  zz[, 3] = as.numeric(zz[, 3])
+  zz
+}
 
 #' Creates quipu-type charts for a set of SSR markers
 #' 
@@ -309,6 +325,9 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
     stopifnot(all(is.numeric(obs.alls.frq$frequency), 
                   0 < min(obs.alls.frq$frequency), 
                   max(obs.alls.frq$frequency < 1) ))
+  }
+  if(is.null(obs.alls.frq)){
+    obs.alls.frq <- get_obs_freq(data)
   }
   
     options(warn = -1)
