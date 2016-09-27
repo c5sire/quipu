@@ -17,6 +17,7 @@ shinyServer(function(input, output) {
            species.name = input$speciesName,
            set.name = input$setName,
            id.label = input$idLabel, 
+           img.format = "screen",
            node.size = c(as.numeric(input$nodeG1),
                          as.numeric(input$nodeG2),
                          as.numeric(input$nodeG3),

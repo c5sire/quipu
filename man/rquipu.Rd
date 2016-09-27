@@ -5,12 +5,11 @@
 \title{Creates quipu-type charts for a set of SSR markers}
 \usage{
 rquipu(data, a.subset = c("all"), ylim = c(50, 350), res = c(1500, 1200),
-  dir.print = tempdir(), dir.logo = NA, col.node = c("red3", "green",
+  dir.print = getwd(), dir.logo = NA, col.node = c("red3", "green",
   "blue", "gray50"), col.marg = c("gray60", "black", "black"),
-  species.name = NA, set.name = NA, img.format = c("screen", "jpeg",
-  "jpg", "png"), ltr.size = 0.8, show.accs.total = TRUE,
-  id.label = "Identifier", node.size = c(1.5, 1.2, 0.9, 0.6),
-  grp.brks = c(0.01, 0.05, 0.1), obs.alls.frq = NULL,
+  species.name = NA, set.name = NA, img.format = "png", ltr.size = 0.8,
+  show.accs.total = TRUE, id.label = "Identifier", node.size = c(1.5, 1.2,
+  0.9, 0.6), grp.brks = c(0.01, 0.05, 0.1), obs.alls.frq = NULL,
   obs.alls.frq.ref = "dataset", layout = c("full", "no text"),
   show.size.range = TRUE, show.horizontal.lines = TRUE,
   vertical.lines.width = 2)
@@ -24,7 +23,7 @@ rquipu(data, a.subset = c("all"), ylim = c(50, 350), res = c(1500, 1200),
 
 \item{res}{the resolution of the final image in pixels (width, height)}
 
-\item{dir.print}{the directory to use for storing the created images}
+\item{dir.print}{the directory to use for storing the created images; default: current working directory}
 
 \item{dir.logo}{the path to a logo to display on the chart}
 
@@ -36,7 +35,7 @@ rquipu(data, a.subset = c("all"), ylim = c(50, 350), res = c(1500, 1200),
 
 \item{set.name}{a name for the set of accessions}
 
-\item{img.format}{specify a format for the final chart (jpeg or png)}
+\item{img.format}{specify a format for the final chart (jpeg or png); default png.}
 
 \item{ltr.size}{letter size}
 

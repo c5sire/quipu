@@ -1,5 +1,5 @@
 library(magrittr)
-#library(stringr)
+library(stringr)
 #load(potato.quipu)
 
 sim_data <- function(n = 5){
@@ -7,7 +7,7 @@ sim_data <- function(n = 5){
   tbl = potato.quipu
   
   nm = paste0(tbl$primer_name, ".", tbl$marker_size) %>% unique %>% sort
-  m = length(xx)
+  m = length(nm)
   df = as.data.frame(matrix(NA, nrow = n, ncol = m), stringsAsFactors = FALSE)
   names(df) = nm
   for(i in 1:n){
@@ -17,16 +17,25 @@ sim_data <- function(n = 5){
 }
 
 ssr_map = as.data.frame(cbind(
-  marker = c("STG0016", "STM5127", "STM1064", "STG0010", "STM1053", "STI0001",
+  marker = c("STG0016", "STM5127", "STM1064", "STM5114", "STG0010", "STM1053", "STI0001",
              "STI0012", "STI0032", "STPoAc58", "STI0004", "STI0033", "STM0031",
              "STI0003", "STM1104", "STI0014", "STM1052", "STG0025", "STM1106",
              "STG0001", "STM0037", "STI0030", "STM5121"), 
   map = c("I", "I", "II", "II", "III", "III", "IV", "IV", "V", "V", "VI",
-          "VII", "VII", "VIII",  "VIII", "IX", "IX", "X", "X", "XI", "XII", "XII")                      
+          "VII", "VII",  "VIII", "VIII", "IX", "IX", "X","X", "XI", "XI", "XII", "XII")                      
   ), stringsAsFactors = FALSE
   )
-
+# 
 # simdat = sim_data(10)
 # attr(simdat, "map") = ssr_map
-# 
+# #
 # save(simdat, file = "data/simdat.rda")
+
+# wb = openxlsx::createWorkbook("simdat")
+# openxlsx::addWorksheet(wb, "scores")
+# openxlsx::addWorksheet(wb, "map")
+# openxlsx::writeData(wb, sheet = "scores", simdat)
+# openxlsx::writeData(wb, sheet = "map", attr(simdat, "map"))
+# openxlsx::saveWorkbook(wb, "simdat.xlsx", overwrite = TRUE)
+
+

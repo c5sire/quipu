@@ -64,9 +64,9 @@ library(agricolae)
 library(pixmap)
 library(shiny)
 
-assert <- function (expr, error) {
-  if (! expr) stop(error, call. = FALSE)
-}
+# assert <- function (expr, error) {
+#   if (! expr) stop(error, call. = FALSE)
+# }
 
 layout_large_plot <- function (mrcs, grup1, ltr.size, id.label, nameclones, j, ylim, col.marg,
                                show.horizontal.lines=TRUE) {
@@ -262,13 +262,13 @@ get_obs_freq <- function(tbl){
 #' @param a.subset a vector of accession identifiers
 #' @param ylim the range of marker sizes (or alleles) in base pair (bp) units
 #' @param res the resolution of the final image in pixels (width, height)
-#' @param dir.print the directory to use for storing the created images
+#' @param dir.print the directory to use for storing the created images; default: current working directory
 #' @param dir.logo the path to a logo to display on the chart
 #' @param col.node colors for the chart elements
 #' @param col.marg colors for the chart margin elements
 #' @param species.name scientific name of the species of the set of accessions
 #' @param set.name a name for the set of accessions
-#' @param img.format specify a format for the final chart (jpeg or png)
+#' @param img.format specify a format for the final chart (jpeg or png); default png.
 #' @param ltr.size letter size 
 #' @param show.accs.total a logical value to show the number of accessions from the dataset
 #' @param id.label label for identifier
@@ -288,13 +288,13 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
             a.subset = c("all"),
             ylim = c(50,350), 
             res=c(1500,1200),
-            dir.print = tempdir(),
+            dir.print = getwd(), #tempdir(),
             dir.logo = NA, 
             col.node = c("red3","green","blue","gray50"), 
             col.marg = c("gray60","black","black"), 
             species.name = NA, 
             set.name = NA,
-            img.format = c("screen","jpeg","jpg","png"),
+            img.format = "png", #c("screen","jpeg","jpg","png"),
             ltr.size = 0.8,
             show.accs.total = TRUE,
             id.label = "Identifier",
@@ -308,9 +308,16 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
             vertical.lines.width = 2
 )
   {
+  
   grp.size = node.size
   col.fig = col.node
   assert(is.data.frame(data), "Data is not a data.frame")
+  #assert(!any(is.na((data))), "Data has NAs.")
+  
+  if(!is.null(attr(data, which = "map"))){
+    data = scores2list(data)
+  }
+  
   assert(all(names(data) %in% c("accession_id", "primer_name","marker_size","map_location")),
          "The data.frame does not contain the expected column names (see documentation).")
   assert(nrow(data)>0,
@@ -336,6 +343,8 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
     obs.alls.frq <- get_obs_freq(data)
   }
   
+ 
+  
     options(warn = -1)
       CLON = data$accession_id
       MARK = data$primer_name
@@ -353,6 +362,9 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
      assert(all(ss),paste("The dentifier(s): '",mss,"' is/are not in the database.", sep=""))
    }
       
+  # nn = unique(CLON)
+  # shiny::withProgress(max = nn, {    
+      
    dir=paste("In the folder ", dir.print, sep="")
    dat=data.frame(CIP.number=CLON, primer_name_original=MARK, Marker.size=SIZE, Cromosomas=CROMOS)
    
@@ -362,10 +374,16 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
    datos=data.frame(dat,rep("unknw",nrow(dat)))
    dt2=as.matrix(dt2)
    datos=as.matrix(datos)
+   # print(str(datos))
+   # print(str(dt2))
    for(i in 1:nrow(dat))
    { 
      for(j in 1:nrow(dt2))
      {
+       # print(i)
+       # print(j)
+       # print(datos[i, 4])
+       # print(dt2[j, 1])
        if(datos[i,4]==dt2[j,1]){datos[i,5]=dt2[j,2]}
      }
    }
@@ -436,7 +454,8 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
 
    
    clones=unique(datt$CIP.number)
-   nameclones1=paste("CIP",unique(datt$CIP.number))
+   #nameclones1=paste("CIP",unique(datt$CIP.number))
+   nameclones1=paste(unique(datt$CIP.number))
    nameclones=paste(nameclones1,"                          ", sep="")
    
    if(img.format %in% c("jpeg","jpg")) nameclones2=file.path(dir.print, paste(nameclones1,".jpg", sep=""))
@@ -448,8 +467,10 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
    
    for(j in 1:length(clones))
    {
+     #incProgress(amount = 1)
      grup1=datt[datt$CIP.number==clones[j],]
      #mrcs=unique(grup1$primer_name_original) 
+     
      
      ## print image 
      if(img.format %in% c("jpeg","jpg")) jpeg(nameclones2[j],quality = 100,width = res[1], height = res[2],pointsize = 22)
@@ -470,6 +491,7 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
      
      if(img.format != "screen" ) dev.off()
    }
+  #}, message = "Creating images.")
   options(warn=1)
   
 }
@@ -484,5 +506,5 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
 #' @export
 #' 
 runDemo <- function() {
-  runApp(system.file("shiny", package = "quipu"))
+  shiny::runApp(system.file("shiny", package = "quipu"))
 }
