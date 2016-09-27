@@ -39,7 +39,7 @@ NULL
 #' @docType data
 #' @keywords datasets
 #' @aliases potato.quipu
-#' @export
+# @export
 NULL
 
 #' @name allele.freqs
@@ -54,7 +54,7 @@ NULL
 #' @docType data
 #' @keywords datasets
 #' @aliases allele.freqs
-#' @export
+# @export
 NULL
 
 
@@ -71,6 +71,7 @@ assert <- function (expr, error) {
 layout_large_plot <- function (mrcs, grup1, ltr.size, id.label, nameclones, j, ylim, col.marg,
                                show.horizontal.lines=TRUE) {
   par(mar = c(6,4,4,2)+0.1)
+  #print(mrcs)
   plot(1:length(mrcs),seq(min(grup1$Marker.size), max(grup1$Marker.size), length.out=length(mrcs)),
        type="n",axes=FALSE,ylab=list("Allele size [bp]",cex=ltr.size),
        #xlab=list("Chromosomes/SSR Name                                          ",cex=0.7, outer=TRUE),
@@ -122,13 +123,7 @@ draw_vertical_lines <- function( mrcs, datt, ylim, obs.alls.frq, alls.range, lay
      pms = min(alls.range[alls.range$Marker == mrcs[i],"min"])
    }
    lines(c(i,i),c(min(pms),ylim[2]),lty=1,lwd=line.width,col="gray90",type = "l")  # line one
-     # print(i)
-     # print(pt0)
-    # print(length(mrcs))
-    # print(mrcs[i])
-    # print(alls.range)
-   # if(!is.null(obs.alls.frq)){
-     lines(c(i,i),
+   lines(c(i,i),
            c(alls.range[alls.range$Marker == mrcs[i],"min"],
              alls.range[alls.range$Marker == mrcs[i],"max"]),
            #max(pt0$Marker.size)),
@@ -144,18 +139,29 @@ draw_vertical_lines <- function( mrcs, datt, ylim, obs.alls.frq, alls.range, lay
 }
 
 
-draw_nodes <- function(mrcs, grup1, datt, ylim, ltr.size){
+draw_nodes <- function(mrcs, grup1, datt, ylim, ltr.size, dat){
   cmp="inicio"
   ## printing circles 
   mrcs = as.character(mrcs)
+  #print(str(dat))
+  dat[, 2] = as.character(dat[, 2])
+  dat[, 4] = as.character(dat[, 4])
+  #print(datt)
   for(i in 1:length(mrcs))
   {
     #print("Draw nodes")
-    #print(i)
+    #print(str(mrcs[i]))
     
     pt1=grup1[grup1$primer_name_original==mrcs[i],]
-    rom = as.character(datt[datt$primer_name_original == as.character(mrcs[i]),"Cromosomas"][1])
-    #print(pt1)
+    rom = as.character(dat[dat$primer_name_original == as.character(mrcs[i]),"Cromosomas"][1])
+    #print(rom)
+    #print(mrcs[i])
+    # if(is.na(rom)){
+    #   rom = obs.alls.frq
+    # }
+    #print(rom)
+    
+    #print(rom)
     if(nrow(pt1) > 0){
       # print(pt1[1, 4])
       # print(cmp)
@@ -225,7 +231,7 @@ get_obs_freq <- function(tbl){
   xx = paste0(tbl$primer_name, "_", tbl$marker_size)
   xy = table(xx)/length(xx)
   #zz = as.data.frame(cbind(Marker = names(xy), Frequency = as.numeric(xy)))
-  #Marker = stringr::str_split(names(xy), "_")
+  Marker = stringr::str_split(names(xy), "_")
   zz = matrix(unlist(Marker), ncol = 2, byrow = T)
   zz = as.data.frame(cbind(zz, Frequency = as.numeric(xy)), stringsAsFactors = FALSE)
   names(zz) = c("marker", "marker_size", "frequency")
@@ -377,8 +383,8 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
    up = unique(dat$primer_name)
    for(a in 1:length(up) ){
      pn = as.character(up[a])
-     alls.fr[str_detect(names(alls.fr),pn)]= 
-       alls.fr[str_detect(names(alls.fr),pn)]/alls.to[[pn]]
+     alls.fr[stringr::str_detect(names(alls.fr),pn)]= 
+       alls.fr[stringr::str_detect(names(alls.fr),pn)]/alls.to[[pn]]
    }
 
    alls.range=NULL
@@ -460,7 +466,7 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
      draw_vertical_lines(mrcs, datt, ylim, obs.alls.frq, alls.range, layout, 
                          vertical.lines.width,
                          show.size.range)
-     draw_nodes(mrcs, grup1, datt, ylim, ltr.size)
+     draw_nodes(mrcs, grup1, datt, ylim, ltr.size, dat )
      
      if(img.format != "screen" ) dev.off()
    }

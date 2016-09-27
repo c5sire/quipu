@@ -33,14 +33,16 @@ BugReports: https://github.com/c5sire/quipu
 Copyright: International Potato Center (CIP)
 License: MIT + file LICENSE
 VignetteBuilder: knitr
-Suggests: 
+Suggests:
     knitr,
     testthat
-Imports: 
+Imports:
     agricolae,
-    stringr,
+    magrittr,
     pixmap,
     shiny,
+    stringr,
     xtable
-Depends: 
+Depends:
     R (>= 3.0.0)
+RoxygenNote: 5.0.1
