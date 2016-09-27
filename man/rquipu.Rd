@@ -12,7 +12,7 @@ rquipu(data, a.subset = c("all"), ylim = c(50, 350), res = c(1500, 1200),
   0.9, 0.6), grp.brks = c(0.01, 0.05, 0.1), obs.alls.frq = NULL,
   obs.alls.frq.ref = "dataset", layout = c("full", "no text"),
   show.size.range = TRUE, show.horizontal.lines = TRUE,
-  vertical.lines.width = 2)
+  vertical.lines.width = 2, show.desc = TRUE)
 }
 \arguments{
 \item{data}{a data.frame with minimal four columns: accession_id, primer_name, marker_size, map_location; alternatively,}
@@ -58,6 +58,8 @@ rquipu(data, a.subset = c("all"), ylim = c(50, 350), res = c(1500, 1200),
 \item{show.horizontal.lines}{show or hide horizontal lines in the large layout}
 
 \item{vertical.lines.width}{line width of vertical lines; default is 2}
+
+\item{show.desc}{logical; show 'Description' box or not}
 }
 \description{
 The chart shows SSR marker weights on a linear scale where each allele or 'gel band' is represented 

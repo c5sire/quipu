@@ -188,7 +188,7 @@ draw_nodes <- function(mrcs, grup1, datt, ylim, ltr.size, dat){
 
 draw_legend <- function(j, mrcs, ylim, grp.brks, col.fig, grp.size, ltr.size, img.format, 
                         nameclones2, species.name, set.name, clones, show.accs.total,
-                        x, obs.alls.frq.ref){
+                        x, obs.alls.frq.ref, show_desc=TRUE){
   ## one legend
   legend(length(mrcs)+0.7, ylim[2], 
          c(paste("0% - ",                        round(grp.brks[1]*100,0),"%", sep=""), 
@@ -219,7 +219,7 @@ draw_legend <- function(j, mrcs, ylim, grp.brks, col.fig, grp.size, ltr.size, im
           "Source of allele frq:",obs.alls.frq.ref,"",
           "Evaluation Date:",d3,"")
   }
-  legend(length(mrcs)+0.7,ylim[2]-70,imp,pch="",cex=ltr.size-.2, title="Description") 
+  if(show_desc) legend(length(mrcs)+0.7,ylim[2]-70,imp,pch="",cex=ltr.size-.2, title="Description") 
   
   if(!is.na(x)){
     addlogo(x, px=c(length(mrcs)+0.7,length(mrcs)+6.5), py=c(70,125))  
@@ -281,6 +281,7 @@ get_obs_freq <- function(tbl){
 #' @param show.size.range show or hide the allele size range on top of the vertical line
 #' @param show.horizontal.lines show or hide horizontal lines in the large layout
 #' @param vertical.lines.width line width of vertical lines; default is 2
+#' @param show.desc logical; show 'Description' box or not
 #' @example inst/examples/rquipu.R
 #' @author Reinhard Simon, Pablo Carhuapoma
 #' @aliases rquipu
@@ -306,7 +307,8 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
             layout=c("full", "no text"),
             show.size.range = TRUE,
             show.horizontal.lines = TRUE,
-            vertical.lines.width = 2
+            vertical.lines.width = 2,
+            show.desc = TRUE
 )
   {
   
@@ -370,8 +372,10 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
    dat=data.frame(CIP.number=CLON, primer_name_original=MARK, Marker.size=SIZE, Cromosomas=CROMOS)
    
    ## sorting the data by level of chromosome
-   dt2=data.frame(rm1=c("I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV","XVI","XVII","XVIII","XIX","XX"),
-                  valor=c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20))
+   dt2=data.frame(rm1=c("I","II","III","IV","V","VI","VII","VIII","IX","X","XI",
+                        "XII","XIII","XIV","XV","XVI","XVII","XVIII","XIX","XX",
+                        "XXI", "XXII", "XXIII", "XIV", "XV"),
+                  valor=1:25)
    datos=data.frame(dat,rep("unknw",nrow(dat)))
    dt2=as.matrix(dt2)
    datos=as.matrix(datos)
@@ -420,10 +424,17 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
               "is/are missing in your reference file of allele frequencies." )
             )
      alls.fr = ofr
-     alls.range = tapply.stat(obs.alls.frq[,"marker_size"], obs.alls.frq[,"marker"], min)
-     alls.range = cbind(alls.range,
-                        tapply.stat(obs.alls.frq[,"marker_size"], obs.alls.frq[,"marker"], max)[2])
-     names(alls.range) = c("Marker","min","max")
+     # alls.range = tapply.stat(obs.alls.frq[,"marker_size"], obs.alls.frq[,"marker"], min)
+     # alls.range = cbind(alls.range,
+     #                    tapply.stat(obs.alls.frq[,"marker_size"], obs.alls.frq[,"marker"], max)[2])
+     
+     # alls.range = obs.alls.frq[, c(1, 2)] %>% group_by(marker) %>% summarise(min(marker_size), max(marker_size))
+     
+     alls.range = obs.alls.frq[, c(1, 2)] 
+     alls.range = dplyr::group_by(alls.range, marker) 
+     alls.range = dplyr::summarise(alls.range, min(marker_size), max(marker_size))
+     
+     names(alls.range) = c("Marker","min","max") # Marker -> Primer
    }
 
 
@@ -480,7 +491,7 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
        layout_large_plot(mrcs, grup1, ltr.size, id.label, nameclones, j, ylim, col.marg, 
                          show.horizontal.lines)
        draw_legend(j, mrcs, ylim, grp.brks, col.fig, grp.size, ltr.size, img.format, nameclones2, species.name,
-                        set.name, clones, show.accs.total, x, obs.alls.frq.ref)       
+                        set.name, clones, show.accs.total, x, obs.alls.frq.ref, show_desc = show.desc)       
      } else {
        layout_small_plot(mrcs, grup1, ltr.size, id.label, nameclones, j, ylim, col.marg)
      }
