@@ -1,5 +1,5 @@
 quipuFile_ui <- function(){
-tagList(  
+shiny::tagList(  
   fluidRow(
     column(width = 3,
      shinyFiles::shinyFilesButton('quipuFile', label='Data file', title='Please select a file', 

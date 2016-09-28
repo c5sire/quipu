@@ -70,15 +70,18 @@ library(shiny)
 # }
 
 layout_large_plot <- function (mrcs, grup1, ltr.size, id.label, nameclones, j, ylim, col.marg,
-                               show.horizontal.lines=TRUE) {
+                               show.horizontal.lines=TRUE, show.desc = TRUE) {
   par(mar = c(6,4,4,2)+0.1)
   #print(mrcs)
+  mainTitle = c(paste(id.label,": ",nameclones[j], sep=""),""," ")
+  if(!show.desc) mainTitle = ""
+  
   plot(1:length(mrcs),seq(min(grup1$Marker.size), max(grup1$Marker.size), length.out=length(mrcs)),
        type="n",axes=FALSE,ylab=list("Allele size [bp]",cex=ltr.size),
        #xlab=list("Chromosomes/SSR Name                                          ",cex=0.7, outer=TRUE),
        xlab="",
-       main=c(paste(id.label,": ",nameclones[j], sep=""),""," "),
-       cex.main=0.9,xlim=c(1,length(mrcs)+7),ylim=ylim)
+       main=mainTitle,
+       cex.main= ltr.size ,xlim=c(1,length(mrcs)+7),ylim=ylim)
   mtext("                                                 Chromosomes/SSR name", 
         cex=ltr.size, side=1, line=5, adj=0)
   axis(2,seq(ylim[1],ylim[2],25),lwd=1.2,cex.axis=ltr.size,las=2, col=col.marg[2])  
@@ -489,7 +492,7 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
      if(img.format=="png") png(nameclones2[j],width = res[1], height = res[2],pointsize = 22)
      if(layout=="full"){
        layout_large_plot(mrcs, grup1, ltr.size, id.label, nameclones, j, ylim, col.marg, 
-                         show.horizontal.lines)
+                         show.horizontal.lines, show.desc)
        draw_legend(j, mrcs, ylim, grp.brks, col.fig, grp.size, ltr.size, img.format, nameclones2, species.name,
                         set.name, clones, show.accs.total, x, obs.alls.frq.ref, show_desc = show.desc)       
      } else {

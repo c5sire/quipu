@@ -5,14 +5,18 @@ quipu_uiAddin <- function(title = "Khipu"){
     miniUI::gadgetTitleBar("Khipu Creator"),
     miniUI::miniTabstripPanel(selected = "Data",
                               
-            miniUI::miniTabPanel("Data", icon = icon("table"),
+            miniUI::miniTabPanel("Data", icon = shiny::icon("table"),
                    miniUI::miniContentPanel(
                     quipuFile_ui()                         
-                   )),                  
+                   )),
+            miniUI::miniTabPanel("Layout", icon = shiny::icon("table"),
+                                 miniUI::miniContentPanel(
+                                   quipuLayout_ui()                         
+                                 )),
                               
-            miniUI::miniTabPanel("Layout", icon = icon("list-alt"),
+            miniUI::miniTabPanel("Alleles", icon = shiny::icon("list-alt"),
                   miniUI::miniContentPanel(
-                  quipuLayout_ui()                         
+                  #quipuLayout_ui()                         
               )))
   )
   
