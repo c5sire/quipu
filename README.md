@@ -3,6 +3,7 @@ quipu
 
 [![Travis-CI Build Status](https://travis-ci.org/c5sire/quipu.png?branch=master)](https://travis-ci.org/c5sire/quipu)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/c5sire/quipu?branch=master)](https://ci.appveyor.com/project/c5sire/quipu)
+[![Coverage Status](https://img.shields.io/codecov/c/github/c5sire/quipu/master.svg)](https://codecov.io/github/c5sire/quipu?branch=master)
 
 ### First time installation
 ```{r}

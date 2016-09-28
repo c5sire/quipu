@@ -28,10 +28,10 @@ shinyUI(pageWithSidebar(
    textInput("speciesName","Species name","Sample species"),
    textInput("setName","Set name","Sample set"),
   
-   sliderInput("nodeG1", "Node color (group 1)",0.4, 2, 1.5, 0.1),
-   sliderInput("nodeG2", "Node color (group 2)",0.4, 2, 1.2, 0.1),
-   sliderInput("nodeG3", "Node color (group 3)",0.4, 2, 0.9, 0.1),
-   sliderInput("nodeG4", "Node color (group 4)",0.4, 2, 0.6, 0.1),
+   sliderInput("nodeG1", "Node color (group 1)", 0.4, 2, 1.5, 0.1),
+   sliderInput("nodeG2", "Node color (group 2)", 0.4, 2, 1.2, 0.1),
+   sliderInput("nodeG3", "Node color (group 3)", 0.4, 2, 0.9, 0.1),
+   sliderInput("nodeG4", "Node color (group 4)", 0.4, 2, 0.6, 0.1),
    
    selectInput("colorG1", "Choose a color for group 1", choices = colors(), "red3"),
    selectInput("colorG2", "Choose a color for group 2", choices = colors(), "green"),

@@ -1,0 +1,4 @@
+Name: Khipu Creator
+Description: Create molecular khipu
+Binding: quipu_uiAddin
+Interactive: true
