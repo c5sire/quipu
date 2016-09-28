@@ -2,7 +2,6 @@
 
 export(quipu_sv)
 export(quipu_ui)
-export(quipu_uiAddin)
 export(read_scores)
 export(rquipu)
 export(runDemo)

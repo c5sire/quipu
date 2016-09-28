@@ -1,18 +1,18 @@
 
-#' quipu_uiAddin
-#'
-#' @param title a caption
-#' @author Reinhard Simon
-#' @return shiny
-#' @export
 quipu_uiAddin <- function(title = "Khipu"){
   
   ui <- miniUI::miniPage(
     miniUI::gadgetTitleBar("Khipu Creator"),
-    miniUI::miniTabstripPanel(selected = "Parameters",
-            miniUI::miniTabPanel("Parameters", icon = icon("list-alt"),
-                  miniUI::miniContentPanel(padding = 0,
-                  paramsBase_ui()                         
+    miniUI::miniTabstripPanel(selected = "Data",
+                              
+            miniUI::miniTabPanel("Data", icon = icon("table"),
+                   miniUI::miniContentPanel(
+                    quipuFile_ui()                         
+                   )),                  
+                              
+            miniUI::miniTabPanel("Layout", icon = icon("list-alt"),
+                  miniUI::miniContentPanel(
+                  quipuLayout_ui()                         
               )))
   )
   

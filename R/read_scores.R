@@ -10,6 +10,8 @@
 #' The rows contain then scoring for each accession. These must be either 0 (absent), 1 (present)
 #' or NA (no data).
 #' 
+#' TODO: accept more missing data values: -9, 9, -, ., ?
+#' 
 #' The 'map' sheet must have a table with two columns named 'primer' and 'chromosome'. The rows then
 #' contain for each primer the corresponding chromosome id (in Roman numbers).
 #'
@@ -19,15 +21,16 @@
 #' @export
 read_scores <- function(file_name = NULL){
   assert(file.exists(file_name), paste0("File '", file_name,"' does not exist."))
+  scores = NULL
+  try({
   shts = readxl::excel_sheets(file_name)
   
   assert(all(c("scores", "map") %in% shts), "Excel sheet must contain two sheets names: 'scores' and 'map'")
   
-  scores = NULL
-  try({
-    scores = readxl::read_excel(file_name, "scores")  
-    attr(scores, "map") = readxl::read_excel(file_name, "map")
-  })
   
+  scores = readxl::read_excel(file_name, "scores")  
+  attr(scores, "map") = readxl::read_excel(file_name, "map")
+  })
+
   scores
 }

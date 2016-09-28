@@ -8,6 +8,8 @@ ui <- dashboardPage(skin = "yellow",
                     dashboardSidebar(disable = TRUE),
                     
                     body = dashboardBody(
+                      includeCSS("www/bootstrap.min.css"),
+                      includeCSS("www/custom.css"),
                       quipu::quipu_ui("Khipu")
                     )
 )

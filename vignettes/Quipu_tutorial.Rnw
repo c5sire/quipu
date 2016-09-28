@@ -25,6 +25,7 @@ qp <- packageDescription("quipu")
 
 
 \begin{document}
+%\\SweaveOpts{concordance=TRUE}
 
 
 \title{Quipu tutorial (Version \Sexpr{qp$Version})}

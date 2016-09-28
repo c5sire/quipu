@@ -36,7 +36,8 @@ VignetteBuilder: knitr
 Suggests:
     knitr,
     testthat,
-    covr
+    covr,
+    rmarkdown
 Imports:
     pixmap,
     shiny,
@@ -45,7 +46,9 @@ Imports:
     dplyr,
     tidyr,
     readxl,
-    miniUI
+    miniUI,
+    shinyFiles
+Remotes: c5sire/shinyFiles
 Depends:
     R (>= 3.0.0)
 RoxygenNote: 5.0.1

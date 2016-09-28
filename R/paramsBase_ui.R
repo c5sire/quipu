@@ -1,4 +1,4 @@
-paramsBase_ui <- function(ids = paste0("sample.", 1:3)){
+quipuLayout_ui <- function(ids = paste0("sample.", 1:3)){
 
   tagList(
   selectInput("acc_id", "Choose an accession:", 
