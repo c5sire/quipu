@@ -18,6 +18,9 @@ quipu_ui <- function(title = "Khipu") {
                  column(width = 6,     
                    quipuFile_ui(),
                    quipuLayout_ui()
+                ),
+                 column(width = 6,
+                  plotOutput("quipuPlot")
                 )
                )
             ),

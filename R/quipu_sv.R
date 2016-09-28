@@ -41,6 +41,23 @@ quipu_sv <- function(input, output, session){
     paste0("Output directory for khipu graphs: ", do)
   })
   
+  
+  output$quipuPlot <- renderPlot({
+    req(input$quipuFile)
+    req(input$quipuAccId)
+    if(is.na(input$quipuAccId)) return(NULL)
+    withProgress({
+      rquipu(dataInput(), input$quipuAccId, img.format = "screen",
+             layout = input$quipuLayout,
+             id.label = input$quipuIdLabel,
+             show.desc = input$quipuShowTextBox,
+             show.accs.total = input$quipuShowAccsTotal,
+             set.name = input$quipuSetName,
+             species.name = input$quipuSpeciesName
+             )  
+    }, message = "Creating plot ...")
+  })
+  
   observe({
     #input$quipuFile
     chc = dataInput()

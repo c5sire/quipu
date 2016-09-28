@@ -22,6 +22,8 @@ quipu_uiAddin <- function(title = "Khipu"){
   
   server <- function(input, output, session) {
     
+    quipu::quipu_sv(input, output, session)
+    
     observeEvent(input$cancel, {
       msg = c("Khipu Creator cancelled. Bye!")
       stopApp(msg)
