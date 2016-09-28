@@ -10,7 +10,7 @@ tagList(
     ),
     
     column(width = 6,
-      shiny::selectInput("quipuAccId", "Choose an accession:", choices = NA)
+      shiny::selectInput("quipuAccId", "Choose an accession for display:", choices = NA)
     )
   ),
   fluidRow(
