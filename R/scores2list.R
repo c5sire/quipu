@@ -1,7 +1,7 @@
 # score data frame must have an attribut called map containing the mapping to chromosomes
 scores2list <- function(scores){
   map = attr(scores, "map")
-  x = tidyr::gather(scores,key = primer, value = bp, 2:ncol(scores))
+  x = tidyr::gather(scores,key = scores$primer, value = scores$bp, 2:ncol(scores))
   x = x[!is.na(x$bp), ]
   x = x[x$bp != 0, ]
   x = as.data.frame(x, stringsAsFactors = FALSE)

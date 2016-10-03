@@ -25,6 +25,14 @@ qp <- packageDescription("quipu")
 
 
 \begin{document}
+
+<<include=FALSE>>=
+library(knitr)
+opts_chunk$set(
+concordance=TRUE
+)
+@
+
 %\\SweaveOpts{concordance=TRUE}
 
 
@@ -72,7 +80,7 @@ This demo shows the two main chart layouts and the effects of the principal para
 The package \CRANpkg{quipu} comes with a small sample dataset.
 
 <<>>=
-library(agricolae)
+#library(agricolae)
 library(quipu)
 library(xtable)
 data("potato.quipu", package="quipu")

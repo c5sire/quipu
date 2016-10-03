@@ -15,7 +15,7 @@
 #' The 'map' sheet must have a table with two columns named 'primer' and 'chromosome'. The rows then
 #' contain for each primer the corresponding chromosome id (in Roman numbers).
 #'
-#' @param file_name 
+#' @param file_name a path for a data file
 #' @author Reinhard Simon
 #' @return a scores data frame with the map as attribute; or NULL if it cannot be read
 #' @export

@@ -3,6 +3,8 @@
 #' @param input shiny input
 #' @param output shiny output
 #' @param session shiny session
+#' @import shinyFiles
+#' @import shiny
 #' @author Reinhard Simon
 #'
 #' @return shiny

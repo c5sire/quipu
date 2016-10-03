@@ -1,17 +1,21 @@
-library(magrittr)
-library(stringr)
+#library(magrittr)
+#library(stringr)
 #load(potato.quipu)
 
 sim_data <- function(n = 5){
-  
+  potato.quipu = NULL
+  utils::data(potato.quipu, envir = environment())
   tbl = potato.quipu
+  rm(potato.quipu)
   
-  nm = paste0(tbl$primer_name, ".", tbl$marker_size) %>% unique %>% sort
+  nm = paste0(tbl$primer_name, ".", tbl$marker_size) #%>% unique %>% sort
+  nm = unique(nm)
+  nm = sort(nm)
   m = length(nm)
   df = as.data.frame(matrix(NA, nrow = n, ncol = m), stringsAsFactors = FALSE)
   names(df) = nm
   for(i in 1:n){
-    df[i, ] = sample(c(NA, 0, 1), size = m, prob = c(.04, .48, .48), rep = TRUE)
+    df[i, ] = sample(c(NA, 0, 1), size = m, prob = c(.04, .48, .48), replace = TRUE)
   }
   cbind(accession_id = paste0('sample.', 1:n), df)
 }
