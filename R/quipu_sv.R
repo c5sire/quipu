@@ -24,9 +24,14 @@ quipu_sv <- function(input, output, session){
   
   dataInput <- reactive({
     quDp <- dataInDir()
-    withProgress({
-      read_scores(quDp)  
+    
+    dat = withProgress({
+      #tryCatchWE({
+        read_scores(quDp)  
+      #})
+      
     }, message = "Loading scoring data ...")
+    dat  
   })
   
   dataOutput <- reactive({
