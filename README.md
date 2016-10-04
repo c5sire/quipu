@@ -5,23 +5,36 @@ quipu
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/c5sire/quipu?branch=master)](https://ci.appveyor.com/project/c5sire/quipu)
 [![Coverage Status](https://img.shields.io/codecov/c/github/c5sire/quipu/master.svg)](https://codecov.io/github/c5sire/quipu?branch=master)
 
-### First time installation
-```{r}
+## First time installation
+```{r, eval = FALSE}
 install.packages("devtools")
 devtools::install_github("quipu", "c5sire")
 ```
 
-### Demo
-```{r}
+## Demo
+```{r, eval = FALSE}
 quipu::runDemo()
 ```
 
-### Usage
-```{r}
+## Usage
+
+### Command line
+```{r, eval = FALSE}
 library(quipu)
 
 example(rquipu)
 ```
+
+### Shiny User Interface
+```{r, eval = FALSE}
+quipu::quipu_start()
+```
+
+### Gadget User Interface
+
+In RStudio, use the 'Khipu Creator' entry under 'Addins'.
+
+
 
 Right-click on link to download the [tutorial](https://github.com/c5sire/quipu/tree/master/vignettes/Quipu_tutorial.pdf).
 

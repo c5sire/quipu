@@ -18,6 +18,7 @@ on_failure:
 
 after_success:
   - Rscript -e 'library(covr);coveralls()'
+  - bash <(curl -s https://codecov.io/bash)
 
 notifications:
   email:
