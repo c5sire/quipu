@@ -9,15 +9,31 @@ quipu_uiAddin <- function(title = "Khipu"){
                    miniUI::miniContentPanel(
                     quipuFile_ui()                         
                    )),
-            miniUI::miniTabPanel("Layout", icon = shiny::icon("table"),
+            miniUI::miniTabPanel("Layout", icon = shiny::icon("image"),
                                  miniUI::miniContentPanel(
-                                   quipuLayout_ui()                         
+                                   shiny::fluidRow(
+                                     shiny::column(width = 6, 
+                                      quipuLayout_ui()
+                                     ), 
+                                     shiny::column(width = 6, 
+                                      shiny::plotOutput("quipuPlot"),
+                                      shiny::verbatimTextOutput("quipuOutFiles")
+                                     )
+                                   )
                                  )),
                               
-            miniUI::miniTabPanel("Alleles", icon = shiny::icon("list-alt"),
+            miniUI::miniTabPanel("Additional", icon = shiny::icon("list-alt"),
                   miniUI::miniContentPanel(
-                  #quipuLayout_ui()                         
-              )))
+                  paramsNode()                         
+              ))
+            ,
+            miniUI::miniTabPanel("About", icon = shiny::icon("info"),
+                                 miniUI::miniContentPanel(
+                                   htmlOutput('quipuAbout')
+                                 )
+            )
+            
+            )
   )
   
   server <- function(input, output, session) {

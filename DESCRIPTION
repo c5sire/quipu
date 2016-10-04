@@ -2,7 +2,7 @@ Package: quipu
 Type: Package
 Title: Summary Charts of Micro-Satellite Profiles for a Set of
     Biological Samples
-Version: 1.9.14
+Version: 1.9.17
 Date: 2016-09-26
 Authors@R: as.person(c(
     "Reinhard Simon (CIP) <R.SIMON@CGIAR.ORG> [aut, cre]",
@@ -40,6 +40,7 @@ Suggests:
     rmarkdown,
     shinydashboard
 Imports:
+    utils,
     pixmap,
     shiny,
     stringr,

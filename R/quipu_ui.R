@@ -20,9 +20,17 @@ quipu_ui <- function(title = "Khipu") {
                    quipuLayout_ui()
                 ),
                 shiny::column(width = 6,
-                    shiny::plotOutput("quipuPlot")
+                    shiny::plotOutput("quipuPlot"),
+                    shiny::verbatimTextOutput("quipuOutFiles")
                 )
                )
+            ),
+            shiny::tabPanel("Additional Parameters",
+                            shiny::fluidRow(
+                              shiny::column(width = 12,     
+                                            paramsNode()
+                              )
+                            )
             ),
             
             shiny::tabPanel("Data",
@@ -35,14 +43,15 @@ quipu_ui <- function(title = "Khipu") {
             
             shiny::tabPanel("Tutorial",
                      #shiny::includeHTML(system.file("vignette"))
-                     shiny::fluidRow(
-                     #   column(width = 12,
-                     # tags$iframe(style="height:600px; width:100%",
-                     #             src=paste0("file:///", system.file("doc/Quipu_tutorial.pdf",  package = "quipu")))
-                     # )
-                      )
+                     # shiny::fluidRow(
+                     #    column(width = 12,
+                               htmlOutput('quipuHelp')
+                      # )
+                      # )
                      ),
-            shiny::tabPanel("About")
+            shiny::tabPanel("About",
+                            htmlOutput('quipuAbout')
+                            )
          )
        )
       

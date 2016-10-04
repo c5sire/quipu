@@ -372,6 +372,10 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
             "The parameter 'a.subset' must be a vector of type 'character'.")
      ss = a.subset %in% data$accession_id
      mss= paste(a.subset[!ss],collapse=", ")
+     # print(a.subset)
+     # print(ss)
+     # print(a.subset[!ss])
+     if(!ss) return(NULL)
      assert(all(ss),paste("The dentifier(s): '",mss,"' is/are not in the database.", sep=""))
    }
       
