@@ -1,8 +1,8 @@
 Package: quipu
 Type: Package
-Title: Summary Charts of Microsatellite Profiles for a Set of
+Title: Summary Charts of Micro-Satellite Profiles for a Set of
     Biological Samples
-Version: 1.9.13
+Version: 1.9.19
 Date: 2016-09-26
 Authors@R: as.person(c(
     "Reinhard Simon (CIP) <R.SIMON@CGIAR.ORG> [aut, cre]",
@@ -37,8 +37,10 @@ Suggests:
     knitr,
     testthat,
     covr,
-    rmarkdown
+    rmarkdown,
+    shinydashboard
 Imports:
+    utils,
     pixmap,
     shiny,
     shinydashboard,
@@ -49,7 +51,6 @@ Imports:
     readxl,
     miniUI,
     shinyFiles
-Remotes: c5sire/shinyFiles
 Depends:
     R (>= 3.0.0)
 RoxygenNote: 5.0.1

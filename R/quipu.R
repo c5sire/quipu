@@ -27,6 +27,7 @@ NULL
 
 #' @name potato.quipu
 #' @title SSR sample data for a set of potato accessions
+#' @description SSR sample data for a set of potato accessions
 #' @format Tabular format. The records represent unique SSR marker weights in base pairs as obtained
 #'    for a set of three accessions. The combination of the first three columns is unique. The fourth
 #'    column map_location is used for assigning markers to chromosomes or linkage groups.
@@ -44,6 +45,7 @@ NULL
 
 #' @name allele.freqs
 #' @title Sample allele frequencies
+#' @description Sample allele frequencies
 #' @format Tabular format. The records represent unique SSR alleles with their assigned frequencies. 
 #' Frequencies were derived from the sample data and are just for illustrative purposes.
 #' \itemize{
@@ -60,7 +62,7 @@ NULL
 
 
 library(stringr)
-library(agricolae)
+#library(agricolae)
 library(pixmap)
 library(shiny)
 
@@ -225,7 +227,7 @@ draw_legend <- function(j, mrcs, ylim, grp.brks, col.fig, grp.size, ltr.size, im
   if(show_desc) legend(length(mrcs)+0.7,ylim[2]-70,imp,pch="",cex=ltr.size-.2, title="Description") 
   
   if(!is.na(x)){
-    addlogo(x, px=c(length(mrcs)+0.7,length(mrcs)+6.5), py=c(70,125))  
+    pixmap::addlogo(x, px=c(length(mrcs)+0.7,length(mrcs)+6.5), py=c(70,125))  
   }
   par(mar = c(5,4,4,2)+0.1)
   
@@ -286,6 +288,8 @@ get_obs_freq <- function(tbl){
 #' @param vertical.lines.width line width of vertical lines; default is 2
 #' @param show.desc logical; show 'Description' box or not
 #' @example inst/examples/rquipu.R
+#' @import graphics
+#' @import grDevices
 #' @author Reinhard Simon, Pablo Carhuapoma
 #' @aliases rquipu
 #' @export
@@ -337,6 +341,9 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
   
   stopifnot(all(is.vector(grp.size)))
   
+  marker = NULL
+  marker_size = NULL
+  
   if(!is.null(obs.alls.frq)){
     stopifnot(all(class(obs.alls.frq)=="data.frame", 
                   names(obs.alls.frq) %in% c("marker", "marker_size", "frequency"))
@@ -365,6 +372,10 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
             "The parameter 'a.subset' must be a vector of type 'character'.")
      ss = a.subset %in% data$accession_id
      mss= paste(a.subset[!ss],collapse=", ")
+     # print(a.subset)
+     # print(ss)
+     # print(a.subset[!ss])
+     if(!ss) return(NULL)
      assert(all(ss),paste("The dentifier(s): '",mss,"' is/are not in the database.", sep=""))
    }
       
@@ -459,7 +470,7 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
    x = NA
    if(!is.na(dir.logo)){
      if(file.exists(dir.logo)){
-     x <- read.pnm(dir.logo) # reading the logo  
+     x <- pixmap::read.pnm(dir.logo) # reading the logo  
    }
    }
    

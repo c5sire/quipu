@@ -1,22 +1,24 @@
 quipuFile_ui <- function(){
 shiny::tagList(  
-  fluidRow(
-    column(width = 3,
+  shiny::fluidRow(
+    shiny::column(width = 3,
      shinyFiles::shinyFilesButton('quipuFile', label='Data file', title='Please select a file', 
                      multiple=FALSE)
     ),
-    column(width = 3,
-     shinyFiles::shinyDirButton('quipuDir', label = 'Output directory', title = 'Select a directory')
+    shiny::column(width = 3,
+     shinyFiles::shinyDirButton('quipuDir', label = 'Output directory', title = 'Select a directory'),
+     shiny::textOutput("quipuGraphs")
     ),
     
-    column(width = 6,
+    shiny::column(width = 6,
       shiny::selectInput("quipuAccId", "Choose an accession for display:", choices = NA)
     )
-  ),
-  fluidRow(
-    column(width = 12,    
-           textOutput("quipuGraphs")
-    )
   )
+  # ,
+  # shiny::fluidRow(
+  #   shiny::column(width = 12,    
+  #                 shiny::textOutput("quipuGraphs")
+  #   )
+  # )
 )
 }

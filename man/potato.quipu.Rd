@@ -13,5 +13,8 @@
  \item{"marker_size"} {Marker size}
  \item{"map_location"} {Genetic ap location; usually Roman numbers for chromosomes or linkage group.}
 }}
+\description{
+SSR sample data for a set of potato accessions
+}
 \keyword{datasets}
 

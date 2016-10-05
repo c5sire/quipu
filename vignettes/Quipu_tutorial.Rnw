@@ -25,6 +25,14 @@ qp <- packageDescription("quipu")
 
 
 \begin{document}
+
+<<include=FALSE>>=
+library(knitr)
+opts_chunk$set(
+concordance=TRUE
+)
+@
+
 %\\SweaveOpts{concordance=TRUE}
 
 
@@ -72,7 +80,7 @@ This demo shows the two main chart layouts and the effects of the principal para
 The package \CRANpkg{quipu} comes with a small sample dataset.
 
 <<>>=
-library(agricolae)
+#library(agricolae)
 library(quipu)
 library(xtable)
 data("potato.quipu", package="quipu")
@@ -98,6 +106,23 @@ rquipu(dat, a.subset = "sample.1", img.format = "screen")
 @
 
 The 'a.subset' parameter recognizes also a vector of accession id's; e.g. \Rcode{c("sample.1", "sample.3")}.
+
+\subsection{New formats and features}
+
+The raw data format parameter accepts a new format based on a simple scoring format. See the example file:
+
+<<newformat>>=
+datFile = system.file("sample_data/simdat.xlsx", package = "quipu")
+
+dat = quipu::read_scores(datFile)
+
+file.copy(datFile, getwd())
+if(interactive()){
+  quipu::quipu_start()
+}
+@
+
+
 
 \section{Modifications}
 The \Rcode{rquipu} function has several parameters so the graph can be highly customized. The options can be grouped roughly into four groups by purpose: a) visualization, b) classification, c) database reference, and d) fine tuning legend options.

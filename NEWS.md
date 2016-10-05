@@ -1,3 +1,13 @@
+Version 1.9.18
+
+Improvements
+============
+- Added a shiny-based user interface that covers most parameters
+- Added a gadget UI in RStudio
+- Added a parameter to show/not show the description box and the main title
+- The function now accepts an alternative format based on raw scoring data
+- Updated the tutorial
+
 Version 1.9.7
 
 Improvements

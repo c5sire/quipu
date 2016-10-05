@@ -8,41 +8,50 @@
 #' @export
 quipu_ui <- function(title = "Khipu") {
   shinydashboard::tabItem(tabName = title,
-    fluidRow(
-      column(width = 12,
+    shiny::fluidRow(
+      shiny::column(width = 12,
        # box(width = NULL, collapsible = TRUE,
        #   title = "Data",
-         tabBox("Details", width = 12,
-            tabPanel("Source",
-               fluidRow(
-                 column(width = 6,     
+         shinydashboard::tabBox("Details", width = 12,
+            shiny::tabPanel("Source",
+               shiny::fluidRow(
+                 shiny::column(width = 6,     
                    quipuFile_ui(),
                    quipuLayout_ui()
                 ),
-                 column(width = 6,
-                  plotOutput("quipuPlot")
+                shiny::column(width = 6,
+                    shiny::plotOutput("quipuPlot"),
+                    shiny::verbatimTextOutput("quipuOutFiles")
                 )
                )
             ),
+            shiny::tabPanel("Additional Parameters",
+                            shiny::fluidRow(
+                              shiny::column(width = 12,     
+                                            paramsNode()
+                              )
+                            )
+            ),
             
-            tabPanel("Data",
-                     fluidRow(
-                       column(width = 3,     
-                          dataTableOutput("quipuTable")
+            shiny::tabPanel("Data",
+                     shiny::fluidRow(
+                       shiny::column(width = 3,     
+                                     shiny::dataTableOutput("quipuTable")
                        )
                      )
             ),
             
-            tabPanel("Tutorial",
+            shiny::tabPanel("Tutorial",
                      #shiny::includeHTML(system.file("vignette"))
-                     fluidRow(
-                     #   column(width = 12,
-                     # tags$iframe(style="height:600px; width:100%",
-                     #             src=paste0("file:///", system.file("doc/Quipu_tutorial.pdf",  package = "quipu")))
-                     # )
-                      )
+                     # shiny::fluidRow(
+                     #    column(width = 12,
+                               htmlOutput('quipuHelp')
+                      # )
+                      # )
                      ),
-            tabPanel("About")
+            shiny::tabPanel("About",
+                            htmlOutput('quipuAbout')
+                            )
          )
        )
       
