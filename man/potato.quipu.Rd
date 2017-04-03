@@ -17,4 +17,3 @@
 SSR sample data for a set of potato accessions
 }
 \keyword{datasets}
-

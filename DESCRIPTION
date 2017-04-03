@@ -2,8 +2,8 @@ Package: quipu
 Type: Package
 Title: Summary Charts of Micro-Satellite Profiles for a Set of
     Biological Samples
-Version: 1.9.19
-Date: 2016-09-26
+Version: 1.9.20
+Date: 2017-04-03
 Authors@R: as.person(c(
     "Reinhard Simon (CIP) <R.SIMON@CGIAR.ORG> [aut, cre]",
     "Pablo Carhuapoma [aut]",
@@ -52,4 +52,4 @@ Imports:
     shinyFiles
 Depends:
     R (>= 3.0.0)
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
