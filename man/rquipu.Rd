@@ -91,4 +91,3 @@ rquipu(dat, layout="no text", res=c(600,400))
 \author{
 Reinhard Simon, Pablo Carhuapoma
 }
-

@@ -27,4 +27,3 @@ that allows for standardized representation while leaving room for updates
 of the marker kit and the collection of accessions. The graph has been used
 in several CIP publications.
 }
-

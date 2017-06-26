@@ -26,7 +26,8 @@ read_scores <- function(file_name = NULL){
   try({
   shts = readxl::excel_sheets(file_name)
   
-  assert(all(c("scores", "map", "frequencies") %in% shts), "Excel sheet must contain two sheets names: 'scores' and 'map'")
+  assert(all(c("scores", "map", "frequencies") %in% shts), 
+    "Excel sheet must contain two sheets names: 'scores', 'map' and 'frequencies'.")
   
   
   scores = readxl::read_excel(file_name, "scores")  
@@ -37,12 +38,12 @@ read_scores <- function(file_name = NULL){
   attr(scores, "frequencies") = frq
   
   # TODO consistency checks: all map names in score matrix, etc
-  mp = marker2primer(names(scores)[-1])
-  pr = unique(mp[, 1])
+  #mp = marker2primer(names(scores)[-1])
+  #pr = unique(mp[, 1])
   # assert(all(pr %in% map$primer), "All marker names must have corresponding primer names in the map sheet.")
   # assert(all(!is.na(map$chromosome)), "The map file must not have a missing value for the chromosome.")
   
-  pm = paste0(frq[, 1],".", frq[, 2])
+  #pm = paste0(frq[, 1],".", frq[, 2])
   # assert(all(names(scores)[-1] %in% pm), 
   #        paste("All marker names must have corresponding primer names in the frequencies sheet. Check:",
   #              paste(pm[!names(scores)[-1] %in% pm]), collapse = ", ")) 

@@ -15,4 +15,3 @@ Frequencies were derived from the sample data and are just for illustrative purp
 Sample allele frequencies
 }
 \keyword{datasets}
-
