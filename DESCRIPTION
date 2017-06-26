@@ -43,7 +43,6 @@ Imports:
     utils,
     pixmap,
     shiny,
-    shinydashboard,
     stringr,
     xtable,
     dplyr,
