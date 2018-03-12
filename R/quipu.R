@@ -412,6 +412,8 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
   
    datt=data.frame(dat,peso=rep(0,nrow(dat)),color=rep(0,nrow(dat)))
    
+   datt <- datt[!is.na(datt$CIP.number), ]
+   
    # Calculate allele frequency by locus or primer pair
    alls = paste(dat$primer_name ,dat$Marker.size,sep=".")
    alls.fr=table(alls)
@@ -490,6 +492,8 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
    #mrcs=unique(datt$primer_name_original)
    mrcs=unique(dat$primer_name_original) 
    #print(mrcs)
+   
+   datt <- datt[!is.na(datt$CIP.number), ]
    
    for(j in 1:length(clones))
    {
