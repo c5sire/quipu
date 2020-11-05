@@ -121,17 +121,19 @@ rquipu(dat, layout="no text", res=c(600,400))
 # It also shows more customization regarding colors and sizes of
 # different elements.
 
+if (interactive()) {
+        rquipu(dat,
+               layout="no text",
+               img.format = "tiff",
+               vertical.lines.width = 6,
+               col.node = c("turquoise", "orange", "red", "purple"),
+               lines.vertical.color = "wheat1",
+               ranges.color = "wheat2", # allelic size range of set
+               support.color = "wheat3",
+               support.width = 8
+        )     
+}
 
-rquipu(dat,
-       layout="no text",
-       img.format = "tiff",
-       vertical.lines.width = 6,
-       col.node = c("turquoise", "orange", "red", "purple"),
-       lines.vertical.color = "wheat1",
-       ranges.color = "wheat2", # allelic size range of set
-       support.color = "wheat3",
-       support.width = 8
-)
 }
 \author{
 Reinhard Simon, Pablo Carhuapoma
