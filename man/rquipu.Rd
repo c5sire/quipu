@@ -4,15 +4,35 @@
 \alias{rquipu}
 \title{Creates quipu-type charts for a set of SSR markers}
 \usage{
-rquipu(data, a.subset = c("all"), ylim = c(50, 350), res = c(1500, 1200),
-  dir.print = getwd(), dir.logo = NA, col.node = c("red3", "green",
-  "blue", "gray50"), col.marg = c("gray60", "black", "black"),
-  species.name = NA, set.name = NA, img.format = "png", ltr.size = 0.8,
-  show.accs.total = TRUE, id.label = "Identifier", node.size = c(1.5, 1.2,
-  0.9, 0.6), grp.brks = c(0.01, 0.05, 0.1), obs.alls.frq = NULL,
-  obs.alls.frq.ref = "dataset", layout = c("full", "no text"),
-  show.size.range = TRUE, show.horizontal.lines = TRUE,
-  vertical.lines.width = 2, show.desc = TRUE)
+rquipu(
+  data,
+  a.subset = c("all"),
+  ylim = c(50, 350),
+  res = c(1500, 1200),
+  dir.print = getwd(),
+  dir.logo = NA,
+  col.node = c("red3", "green", "blue", "gray50"),
+  col.marg = c("gray60", "black", "black"),
+  species.name = NA,
+  set.name = NA,
+  img.format = "png",
+  ltr.size = 0.8,
+  show.accs.total = TRUE,
+  id.label = "Identifier",
+  node.size = c(1.5, 1.2, 0.9, 0.6),
+  grp.brks = c(0.01, 0.05, 0.1),
+  obs.alls.frq = NULL,
+  obs.alls.frq.ref = "dataset",
+  layout = c("full", "no text"),
+  show.size.range = TRUE,
+  show.horizontal.lines = TRUE,
+  vertical.lines.width = 2,
+  show.desc = TRUE,
+  lines.vertical.color = "grey90",
+  ranges.color = "grey80",
+  support.width = 2,
+  support.color = "black"
+)
 }
 \arguments{
 \item{data}{a data.frame with minimal four columns: accession_id, primer_name, marker_size, map_location; alternatively,}
@@ -35,7 +55,7 @@ rquipu(data, a.subset = c("all"), ylim = c(50, 350), res = c(1500, 1200),
 
 \item{set.name}{a name for the set of accessions}
 
-\item{img.format}{specify a format for the final chart (jpeg or png); default png.}
+\item{img.format}{specify a format for the final chart (jpeg, png, tiff); default png.}
 
 \item{ltr.size}{letter size}
 
@@ -60,6 +80,14 @@ rquipu(data, a.subset = c("all"), ylim = c(50, 350), res = c(1500, 1200),
 \item{vertical.lines.width}{line width of vertical lines; default is 2}
 
 \item{show.desc}{logical; show 'Description' box or not}
+
+\item{lines.vertical.color}{character; valid color name; default: grey90.}
+
+\item{ranges.color}{character; valid color name; default: grey80.}
+
+\item{support.width}{integer; width of uppper bar supporting hanging lines; default 1.}
+
+\item{support.color}{character; valid color name; default: black.}
 }
 \description{
 The chart shows SSR marker weights on a linear scale where each allele or 'gel band' is represented 
@@ -87,6 +115,23 @@ str(dat)
 rquipu(dat)
 
 rquipu(dat, layout="no text", res=c(600,400))
+
+
+# This example produces high resolution output.
+# It also shows more customization regarding colors and sizes of
+# different elements.
+
+
+rquipu(dat,
+       layout="no text",
+       img.format = "tiff",
+       vertical.lines.width = 6,
+       col.node = c("turquoise", "orange", "red", "purple"),
+       lines.vertical.color = "wheat1",
+       ranges.color = "wheat2", # allelic size range of set
+       support.color = "wheat3",
+       support.width = 8
+)
 }
 \author{
 Reinhard Simon, Pablo Carhuapoma

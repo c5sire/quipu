@@ -101,7 +101,8 @@ layout_large_plot <- function (mrcs, grup1, ltr.size, id.label, nameclones, j, y
 
 layout_small_plot <- function (mrcs, grup1, ltr.size, id.label, nameclones, j, ylim, col.marg) {
   par(mar = c(0,0,0,0)+0.5)
-  plot(1:length(mrcs),seq(min(grup1$Marker.size), max(grup1$Marker.size), length.out=length(mrcs)),
+  plot(1:length(mrcs),
+       seq(min(grup1$Marker.size), max(grup1$Marker.size), length.out=length(mrcs)),
        type="n",axes=FALSE,ylab="",
        xlab="",
        main=""
@@ -111,15 +112,19 @@ layout_small_plot <- function (mrcs, grup1, ltr.size, id.label, nameclones, j, y
 
 draw_vertical_lines <- function( mrcs, datt, ylim, obs.alls.frq, alls.range, layout,
                                  line.width = 2,
-                                 show.size.range = TRUE
+                                 show.size.range = TRUE,
+                                 ranges.color = "grey80",
+                                 lines.vertical.color = "grey90",
+                                 support.width=support.width,
+                                 support.color=support.color
                                  ){
   ## the vertical lines 
   if(show.size.range) {
     alls.width = (line.width + 2)  
-    alls.color = "grey80"
+    alls.color = ranges.color
   } else {
     alls.width = line.width
-    alls.color = "grey90"
+    alls.color = lines.vertical.color
   }
   
   for(i in 1:length(mrcs)){
@@ -128,18 +133,21 @@ draw_vertical_lines <- function( mrcs, datt, ylim, obs.alls.frq, alls.range, lay
    if(nrow(pt0) == 0){
      pms = min(alls.range[alls.range$Marker == mrcs[i],"min"])
    }
-   lines(c(i,i),c(min(pms),ylim[2]),lty=1,lwd=line.width,col="gray90",type = "l")  # line one
+   lines(c(i,i),c(min(pms),ylim[2]),lty=1,lwd=line.width, 
+         col=lines.vertical.color,
+         type = "l")  # line one
    lines(c(i,i),
            c(alls.range[alls.range$Marker == mrcs[i],"min"],
              alls.range[alls.range$Marker == mrcs[i],"max"]),
            #max(pt0$Marker.size)),
-           lty=1,lwd=alls.width,col="gray80", type = "l")
+           lty=1,lwd=alls.width, 
+           col=ranges.color, type = "l")
    # } else {
       #lines(c(i,i),c(min(pt0$Marker.size),max(pt0$Marker.size)),lty=1,lwd=alls.width,col="gray80",type = "l")  
    # }
   }
   if(layout == "no text"){
-    abline(h=(ylim[2]-28))
+    abline(h=(ylim[2]-28), lwd = support.width, col = support.color)
   }
   
 }
@@ -274,7 +282,7 @@ get_obs_freq <- function(tbl){
 #' @param col.marg colors for the chart margin elements
 #' @param species.name scientific name of the species of the set of accessions
 #' @param set.name a name for the set of accessions
-#' @param img.format specify a format for the final chart (jpeg or png); default png.
+#' @param img.format specify a format for the final chart (jpeg, png, tiff); default png.
 #' @param ltr.size letter size 
 #' @param show.accs.total a logical value to show the number of accessions from the dataset
 #' @param id.label label for identifier
@@ -287,6 +295,10 @@ get_obs_freq <- function(tbl){
 #' @param show.horizontal.lines show or hide horizontal lines in the large layout
 #' @param vertical.lines.width line width of vertical lines; default is 2
 #' @param show.desc logical; show 'Description' box or not
+#' @param lines.vertical.color character; valid color name; default: grey90.
+#' @param ranges.color character; valid color name; default: grey80.
+#' @param support.width integer; width of uppper bar supporting hanging lines; default 1.
+#' @param support.color character; valid color name; default: black.
 #' @example inst/examples/rquipu.R
 #' @import graphics
 #' @import grDevices
@@ -315,10 +327,14 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
             show.size.range = TRUE,
             show.horizontal.lines = TRUE,
             vertical.lines.width = 2,
-            show.desc = TRUE
+            show.desc = TRUE,
+            lines.vertical.color = "grey90",
+            ranges.color = "grey80",
+            support.width = 2,
+            support.color = "black"
 )
   {
-  
+ 
   grp.size = node.size
   col.fig = col.node
   assert(is.data.frame(data), "Data is not a data.frame")
@@ -488,6 +504,7 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
    
    if(img.format %in% c("jpeg","jpg")) nameclones2=file.path(dir.print, paste(nameclones1,".jpg", sep=""))
    if(img.format=="png")  nameclones2=file.path(dir.print, paste(nameclones1,".png", sep=""))
+   if(img.format=="tiff")  nameclones2=file.path(dir.print, paste(nameclones1,".tiff", sep=""))
    
    #mrcs=unique(datt$primer_name_original)
    mrcs=unique(dat$primer_name_original) 
@@ -505,6 +522,7 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
      ## print image 
      if(img.format %in% c("jpeg","jpg")) jpeg(nameclones2[j],quality = 100,width = res[1], height = res[2],pointsize = 22)
      if(img.format=="png") png(nameclones2[j],width = res[1], height = res[2],pointsize = 22)
+     if(img.format=="tiff") tiff(nameclones2[j],width = res[1], height = res[2],pointsize = 22, res=300)
      if(layout=="full"){
        layout_large_plot(mrcs, grup1, ltr.size, id.label, nameclones, j, ylim, col.marg, 
                          show.horizontal.lines, show.desc)
@@ -516,7 +534,11 @@ rquipu <-  function (data, #accession, marker, marker.size, map.location,
      
      draw_vertical_lines(mrcs, datt, ylim, obs.alls.frq, alls.range, layout, 
                          vertical.lines.width,
-                         show.size.range)
+                         show.size.range,
+                         ranges.color = ranges.color,
+                         lines.vertical.color = lines.vertical.color,
+                         support.width = support.width,
+                         support.color = support.color)
      draw_nodes(mrcs, grup1, datt, ylim, ltr.size, dat )
      
      if(img.format != "screen" ) dev.off()
